@@ -1,7 +1,8 @@
-# pyruter - A module to get information about the next departure from a stop.
+# pyuptimerobot - A python module to monitor Uptime Robot monitors.
 
 #### Notes
 This has been tested with python 3.6  
+This module require an API key from Uptime Robot.
 This module uses these external libararies:
 - requests
 
