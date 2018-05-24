@@ -15,10 +15,11 @@ pip install pyuptimerobot
 from pyuptimerobot import UptimeRobot
 
 apikey = 'u432898-d2507e493b31217e6c64fd35'
+monitor = '1527172614' #optional
 ur = UptimeRobot()
 
-#Get deperture information:
-result = ur.getMonitors(apikey)
+#Get monitor information:
+result = ur.getMonitors(apikey, monitor)
 
 #Print the result:
 print(result)
