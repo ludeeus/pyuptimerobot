@@ -12,6 +12,7 @@ class UptimeRobot:
 
     def __init__(self):
         """Initialize"""
+
     def getMonitors(self, apikey, monitors='none'):
         """Get departure info from stopid."""
         data= 'api_key=' + apikey + '&format=json'
@@ -19,6 +20,12 @@ class UptimeRobot:
             data += '&monitors=' + monitors
         fetchUrl = self.BASE_URL
         fetchUrl += 'getMonitors'
-        monitors = requests.post(fetchUrl,
-            headers=self.headers, data=data).json()
-        return monitors
+        try:
+            monitors = requests.post(fetchUrl, headers=self.headers, data=data)
+        except:
+            return False
+        else:
+            if monitors:
+                return monitors.json()
+            else:
+                return False
