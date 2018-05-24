@@ -21,7 +21,8 @@ class UptimeRobot:
         fetchUrl = self.BASE_URL
         fetchUrl += 'getMonitors'
         try:
-            monitors = requests.post(fetchUrl, headers=self.headers, data=data)
+            monitors = requests.post(fetchUrl,
+                headers=self.headers, data=data, timeout=3)
         except:
             return False
         else:

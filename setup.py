@@ -3,7 +3,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
     name="pyuptimerobot",
-    version="0.0.3",
+    version="0.0.4",
     author="Joakim Sorensen",
     author_email="joasoe@gmail.com",
     description="A python module to monitor Uptime Robot monitors.",
