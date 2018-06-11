@@ -18,7 +18,5 @@ push_pypi:
 push_github:
     stage: deploy
     script:
-        - wget -q https://gitlab.com/ludeeus/toolbox/raw/master/CI-Scripts/push_to_public_repo/init.sh
-        - wget -q https://gitlab.com/ludeeus/toolbox/raw/master/CI-Scripts/push_to_public_repo/push.sh
-        - bash init.sh github pip-packages "" /pyuptimerobot
-        - bash push.sh Europe/Oslo
+        - curl -sL https://gitlab.com/ludeeus/toolbox/raw/master/CI-Scripts/push_to_public_repo/init.sh | bash -s github pip-packages "" /pyuptimerobot
+        - curl -sL https://gitlab.com/ludeeus/toolbox/raw/master/CI-Scripts/push_to_public_repo/push.sh | bash -s Europe/Oslo
