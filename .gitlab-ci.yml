@@ -2,19 +2,7 @@ push_pypi:
     stage: deploy
     image: python:3.6.5
     script:
-        - pip install --upgrade pip
-        - pip install twine setuptools
-        - rm -rf dist
-        - echo "[distutils]" >> ~/.pypirc
-        - echo "index-servers =" >> ~/.pypirc
-        - echo "    pypi" >> ~/.pypirc
-        - echo "" >> ~/.pypirc
-        - echo "[pypi]" >> ~/.pypirc
-        - echo "${PYPI_REPO}" >> ~/.pypirc
-        - echo "${PYPI_USER}" >> ~/.pypirc
-        - echo "${PYPI_PASSWORD}" >> ~/.pypirc
-        - python setup.py sdist bdist_wheel
-        - twine upload -r pypi dist/*.whl
+        - curl -sL https://gitlab.com/ludeeus/toolbox/raw/master/CI-Scripts/push_to_public_repo/pypi.sh | bash
 push_github:
     stage: deploy
     script:
