@@ -1,0 +1,9 @@
+{
+    "stat": "fail",
+    "error": {
+        "type": "invalid_parameter",
+        "parameter_name": "api_key",
+        "passed_value": "bad_key",
+        "message": "api_key not found."
+    }
+}

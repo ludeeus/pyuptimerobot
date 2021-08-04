@@ -1,27 +1,30 @@
-# pyuptimerobot - A python module to monitor Uptime Robot monitors.
+# pyuptimerobot
 
-#### Notes
-This has been tested with python 3.6  
-This module require an API key from Uptime Robot.
-This module uses these external libararies:
-- requests
+[![codecov](https://codecov.io/gh/ludeeus/pyuptimerobot/branch/master/graph/badge.svg)](https://codecov.io/gh/ludeeus/pyuptimerobot)
+![python version](https://img.shields.io/badge/Python-3.8=><=3.9-blue.svg)
+[![PyPI](https://img.shields.io/pypi/v/pyuptimerobot)](https://pypi.org/project/pyuptimerobot)
+![Actions](https://github.com/ludeeus/pyuptimerobot/workflows/Actions/badge.svg?branch=main)
 
-#### Install
+
+_Python API wrapper for Uptime Robot_
+
+## Installation
+
 ```bash
-pip install pyuptimerobot
+python3 -m pip install pyuptimerobot
 ```
 
-#### Usage:
-```python
-from pyuptimerobot import UptimeRobot
+Look at the file `example.py` for a usage example.
 
-apikey = 'u432898-d2507e493b31217e6c64fd35'
-monitor = '1527172614' #optional
-ur = UptimeRobot()
+## Contribute
 
-#Get monitor information:
-result = ur.getMonitors(apikey, monitor)
+**All** contributions are welcome!
 
-#Print the result:
-print(result)
-```
+1. Fork the repository
+2. Clone the repository locally and open the devcontainer or use GitHub codespaces
+3. Do your changes
+4. Lint the files with `make black`
+5. Ensure all tests passes with `make test`
+6. Ensure 100% coverage with `make coverage`
+7. Commit your work, and push it to GitHub
+8. Create a PR against the `main` branch
