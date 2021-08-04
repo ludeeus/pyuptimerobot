@@ -1,11 +1,11 @@
 """Tests for Container."""
 
-from pyuptimerobot.models import APIStatus
-import pytest
 import aiohttp
+import pytest
 
-from tests.common import fixture, TEST_API_TOKEN, TEST_RESPONSE_HEADERS
 from pyuptimerobot import UptimeRobot
+from pyuptimerobot.models import APIStatus
+from tests.common import TEST_API_TOKEN, TEST_RESPONSE_HEADERS, fixture
 
 
 @pytest.mark.asyncio

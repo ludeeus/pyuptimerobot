@@ -5,14 +5,17 @@ import aiohttp
 
 from pyuptimerobot import UptimeRobot
 
-API_KEY = "ur432898-0acf29ba7b208ac5fa49e303"
+API_KEY = ""
 
 
 async def example():
-    """Example usage of pyhaversion."""
+    """Example usage of pyuptimerobot."""
     async with aiohttp.ClientSession() as session:
         api = UptimeRobot(API_KEY, session)
-        print((await api.async_get_monitors()))
+        account = await api.async_get_account_details()
+        monitors = await api.async_get_monitors()
+        print("Account:", account)
+        print("Monitors:", monitors)
 
 
 loop = asyncio.get_event_loop()

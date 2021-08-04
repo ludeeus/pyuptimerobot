@@ -1,23 +1,27 @@
 """Decorator for Uptime Robot"""
 from __future__ import annotations
+
+import asyncio
+
+import aiohttp
+import async_timeout
+
 from pyuptimerobot.exceptions import (
     UptimeRobotConnectionException,
     UptimeRobotException,
 )
-import aiohttp
-import async_timeout
-from .const import API_BASE_URL, LOGGER, API_HEADERS
+
+from .const import API_BASE_URL, API_HEADERS, LOGGER
 from .models import UptimeRobotApiResponse
-import asyncio
 
 
-def api_request(api_path: str, method: str = "POST") -> UptimeRobotApiResponse:
+def api_request(api_path: str, method: str = "POST"):
     """Decorator for Uptime Robot API request"""
 
-    def decorator(func) -> UptimeRobotApiResponse:
+    def decorator(func):
         """Decorator"""
 
-        async def wrapper(*args, **kwargs) -> UptimeRobotApiResponse:
+        async def wrapper(*args, **kwargs):
             """Wrapper"""
             client = args[0]
             request_data = f"api_key={client._api_key}&format=json"

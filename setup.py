@@ -21,14 +21,13 @@ setup(
     install_requires=[
         "aiohttp>=3.6.1,<4.0",
         "async_timeout<=3.0.1",
-        "awesomeversion>=21.2.3",
     ],
     keywords=["homeassistant", "version", "update"],
     license="MIT license",
     long_description_content_type="text/markdown",
     long_description=readme,
     name="pyuptimerobot",
-    packages=find_packages(include=["pyuptimerobot"]),
+    packages=find_packages(include=["pyuptimerobot", "pyuptimerobot*"]),
     python_requires=">=3.8.0",
     url="https://github.com/ludeeus/pyuptimerobot",
 )

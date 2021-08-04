@@ -1,8 +1,9 @@
 """Uptime Robot models"""
 from __future__ import annotations
-from typing import Any
+
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 
 class MonitorType(Enum):

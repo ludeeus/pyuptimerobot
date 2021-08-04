@@ -1,14 +1,15 @@
 """Tests for Container."""
 
 import asyncio
-from pyuptimerobot.exceptions import UptimeRobotException
 from unittest.mock import patch
-from pyuptimerobot.models import APIStatus
-import pytest
-import aiohttp
 
-from tests.common import fixture, TEST_API_TOKEN, TEST_RESPONSE_HEADERS
+import aiohttp
+import pytest
+
 from pyuptimerobot import UptimeRobot, UptimeRobotConnectionException
+from pyuptimerobot.exceptions import UptimeRobotException
+from pyuptimerobot.models import APIStatus
+from tests.common import TEST_API_TOKEN, TEST_RESPONSE_HEADERS, fixture
 
 
 @pytest.mark.asyncio
