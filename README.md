@@ -1,7 +1,7 @@
 # pyuptimerobot
 
 [![codecov](https://codecov.io/gh/ludeeus/pyuptimerobot/branch/master/graph/badge.svg)](https://codecov.io/gh/ludeeus/pyuptimerobot)
-![python version](https://img.shields.io/badge/Python-3.8=><=3.9-blue.svg)
+![python version](https://img.shields.io/badge/Python-3.8=><=3.10-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/pyuptimerobot)](https://pypi.org/project/pyuptimerobot)
 ![Actions](https://github.com/ludeeus/pyuptimerobot/workflows/Actions/badge.svg?branch=main)
 
