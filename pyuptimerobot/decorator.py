@@ -6,13 +6,10 @@ import asyncio
 import aiohttp
 import async_timeout
 
-from pyuptimerobot.exceptions import (
-    UptimeRobotConnectionException,
-    UptimeRobotException,
-)
+from pyuptimerobot import exceptions
 
 from .const import API_BASE_URL, API_HEADERS, LOGGER
-from .models import UptimeRobotApiResponse
+from .models import APIStatus, UptimeRobotApiResponse
 
 
 def api_request(api_path: str, method: str = "POST"):
@@ -40,35 +37,50 @@ def api_request(api_path: str, method: str = "POST"):
                     )
 
                     if request.status != 200:
-                        raise UptimeRobotConnectionException(
+                        raise exceptions.UptimeRobotConnectionException(
                             f"Request for '{url}' failed with status code '{request.status}'"
                         )
 
                 result = await request.json()
             except aiohttp.ClientError as exception:
-                raise UptimeRobotConnectionException(
+                raise exceptions.UptimeRobotConnectionException(
                     f"Request exception for '{url}' with - {exception}"
                 ) from exception
 
             except asyncio.TimeoutError:
-                raise UptimeRobotConnectionException(f"Request timeout for '{url}'")
+                raise exceptions.UptimeRobotConnectionException(
+                    f"Request timeout for '{url}'"
+                )
 
-            except UptimeRobotConnectionException as exception:
-                raise UptimeRobotConnectionException(exception) from exception
+            except exceptions.UptimeRobotConnectionException as exception:
+                raise exceptions.UptimeRobotConnectionException(
+                    exception
+                ) from exception
 
-            except UptimeRobotException as exception:
-                raise UptimeRobotException(exception) from exception
+            except exceptions.UptimeRobotException as exception:
+                raise exceptions.UptimeRobotException(exception) from exception
 
             except (Exception, BaseException) as exception:
-                raise UptimeRobotException(
+                raise exceptions.UptimeRobotException(
                     f"Unexpected exception for '{url}' with - {exception}"
                 ) from exception
 
             LOGGER.debug("Requesting %s returned %s", url, result)
 
-            return UptimeRobotApiResponse.from_dict(
+            response = UptimeRobotApiResponse.from_dict(
                 {**result, "_api_path": api_path, "_method": method}
             )
+
+            if response.status == APIStatus.FAIL:
+                if response.error.message in (
+                    "api_key not found.",
+                    "api_key is invalid.",
+                ):
+                    raise exceptions.UptimeRobotAuthenticationException(
+                        "The provided API key is not valid"
+                    )
+
+            return response
 
         return wrapper
 

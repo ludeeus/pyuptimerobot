@@ -6,9 +6,12 @@ from unittest.mock import patch
 import aiohttp
 import pytest
 
-from pyuptimerobot import UptimeRobot, UptimeRobotConnectionException
+from pyuptimerobot import (
+    UptimeRobot,
+    UptimeRobotAuthenticationException,
+    UptimeRobotConnectionException,
+)
 from pyuptimerobot.exceptions import UptimeRobotException
-from pyuptimerobot.models import APIStatus
 from tests.common import TEST_API_TOKEN, TEST_RESPONSE_HEADERS, fixture
 
 
@@ -28,9 +31,8 @@ async def test_api_key_error(aresponses):
 
     async with aiohttp.ClientSession() as session:
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
-        result = await client.async_get_monitors()
-        assert result.status == APIStatus.FAIL
-        assert result.error.message == "api_key not found."
+        with pytest.raises(UptimeRobotAuthenticationException):
+            await client.async_get_monitors()
 
 
 @pytest.mark.asyncio
