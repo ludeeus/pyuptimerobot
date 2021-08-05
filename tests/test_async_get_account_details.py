@@ -27,3 +27,4 @@ async def test_async_get_account_details(aresponses):
         result = await client.async_get_account_details()
         assert result.status == APIStatus.OK
         assert result.data.email == "test@domain.com"
+        assert result.data.user_id == 1234567890

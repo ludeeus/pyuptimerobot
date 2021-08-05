@@ -2,6 +2,7 @@
     "stat": "ok",
     "account": {
         "email": "test@domain.com",
+        "user_id": 1234567890,
         "monitor_limit": 50,
         "monitor_interval": 1,
         "up_monitors": 1,

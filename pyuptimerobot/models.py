@@ -69,6 +69,7 @@ class UptimeRobotAccount(UptimeRobotBaseModel):
     """Account model for Uptime Robot."""
 
     email: str = ""
+    user_id: int = 0
     up_monitors: int = 0
     down_monitors: int = 0
     paused_monitors: int = 0
