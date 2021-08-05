@@ -7,3 +7,7 @@ class UptimeRobotException(Exception):
 
 class UptimeRobotConnectionException(UptimeRobotException):
     """Uptime Robot connection exception."""
+
+
+class UptimeRobotAuthenticationException(UptimeRobotException):
+    """Uptime Robot authentication exception."""
