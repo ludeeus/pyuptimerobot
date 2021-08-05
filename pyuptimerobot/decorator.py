@@ -72,7 +72,11 @@ def api_request(api_path: str, method: str = "POST"):
             )
 
             if response.status == APIStatus.FAIL:
-                if response.error.message in (
+                if response.error.message == "api_key parameter is missing.":
+                    raise exceptions.UptimeRobotAuthenticationException(
+                        "No API key was provided"
+                    )
+                elif response.error.message in (
                     "api_key not found.",
                     "api_key is invalid.",
                 ):

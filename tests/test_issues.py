@@ -28,9 +28,24 @@ async def test_api_key_error(aresponses):
             headers=TEST_RESPONSE_HEADERS,
         ),
     )
+    aresponses.add(
+        "api.uptimerobot.com",
+        "/v2/getMonitors",
+        "post",
+        aresponses.Response(
+            text=fixture("missing_api_key", False),
+            status=200,
+            headers=TEST_RESPONSE_HEADERS,
+        ),
+    )
 
     async with aiohttp.ClientSession() as session:
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
+        with pytest.raises(UptimeRobotAuthenticationException):
+            await client.async_get_monitors()
+
+    async with aiohttp.ClientSession() as session:
+        client = UptimeRobot(session=session, api_key="")
         with pytest.raises(UptimeRobotAuthenticationException):
             await client.async_get_monitors()
 
