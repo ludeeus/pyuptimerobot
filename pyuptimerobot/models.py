@@ -12,6 +12,8 @@ class MonitorType(Enum):
     HTTP = 1
     keyword = 2
     ping = 3
+    port = 4
+    heartbeat = 5
 
 
 class APIStatus(str, Enum):
