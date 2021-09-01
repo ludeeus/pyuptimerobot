@@ -13,7 +13,6 @@ class MonitorType(Enum):
     keyword = 2
     ping = 3
     port = 4
-    """ for PRO Plan only """
     heartbeat = 5
 
 
