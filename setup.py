@@ -19,10 +19,7 @@ setup(
     ],
     version="main",
     description="Python API wrapper for Uptime Robot.",
-    install_requires=[
-        "aiohttp>=3.6.1,<4.0",
-        "async_timeout<=3.0.1",
-    ],
+    install_requires=["aiohttp>=3.6.1,<4.0"],
     keywords=["homeassistant", "version", "update"],
     license="MIT license",
     long_description_content_type="text/markdown",

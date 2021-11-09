@@ -2,14 +2,17 @@
 from __future__ import annotations
 
 import asyncio
+from typing import TYPE_CHECKING
 
 import aiohttp
-import async_timeout
 
 from pyuptimerobot import exceptions
 
 from .const import API_BASE_URL, API_HEADERS, LOGGER
 from .models import APIStatus, UptimeRobotApiResponse
+
+if TYPE_CHECKING:
+    from .uptimerobot import UptimeRobot
 
 
 def api_request(api_path: str, method: str = "POST"):
@@ -20,7 +23,7 @@ def api_request(api_path: str, method: str = "POST"):
 
         async def wrapper(*args, **kwargs):
             """Wrapper"""
-            client = args[0]
+            client: UptimeRobot = args[0]
             request_data = f"api_key={client._api_key}&format=json"
             url = f"{API_BASE_URL}{api_path}"
             if kwargs:
@@ -28,18 +31,18 @@ def api_request(api_path: str, method: str = "POST"):
                     request_data += f"&{key}={value}"
             LOGGER.debug("Requesting %s", url)
             try:
-                async with async_timeout.timeout(10, loop=asyncio.get_event_loop()):
-                    request = await client._session.request(
-                        method=method,
-                        url=url,
-                        headers=API_HEADERS,
-                        data=request_data,
-                    )
+                request = await client._session.request(
+                    method=method,
+                    url=url,
+                    headers=API_HEADERS,
+                    data=request_data,
+                    timeout=aiohttp.ClientTimeout(total=10),
+                )
 
-                    if request.status != 200:
-                        raise exceptions.UptimeRobotConnectionException(
-                            f"Request for '{url}' failed with status code '{request.status}'"
-                        )
+                if request.status != 200:
+                    raise exceptions.UptimeRobotConnectionException(
+                        f"Request for '{url}' failed with status code '{request.status}'"
+                    )
 
                 result = await request.json()
             except aiohttp.ClientError as exception:
@@ -50,7 +53,7 @@ def api_request(api_path: str, method: str = "POST"):
             except asyncio.TimeoutError:
                 raise exceptions.UptimeRobotConnectionException(
                     f"Request timeout for '{url}'"
-                )
+                ) from None
 
             except exceptions.UptimeRobotConnectionException as exception:
                 raise exceptions.UptimeRobotConnectionException(
