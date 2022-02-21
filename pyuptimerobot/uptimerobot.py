@@ -23,6 +23,8 @@ class UptimeRobot:
 
     @api_request("/editMonitor")
     async def async_edit_monitor(
-        self, monitor_id: int, **kwargs
+        self,
+        id: int,
+        **kwargs,
     ) -> UptimeRobotApiResponse:
         """Edit monitor settings via API."""
