@@ -1,1 +1,1 @@
-"""Test package for Uptime Robot."""
+"""Test package for pyuptimerobot."""
