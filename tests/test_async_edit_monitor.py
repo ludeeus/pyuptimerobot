@@ -24,5 +24,5 @@ async def test_async_edit_monitor(aresponses):
 
     async with aiohttp.ClientSession() as session:
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
-        result = await client.async_edit_monitor(**{"id": 777749809, "status": 0})
+        result = await client.async_edit_monitor(monitor_id=777749809, **{"status": 0})
         assert result.status == APIStatus.OK
