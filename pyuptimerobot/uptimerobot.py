@@ -20,3 +20,11 @@ class UptimeRobot:
     @api_request("/getAccountDetails")
     async def async_get_account_details(self, **kwargs) -> UptimeRobotApiResponse:
         """Get account details from API."""
+
+    @api_request("/editMonitor")
+    async def async_edit_monitor(
+        self,
+        id: int,
+        **kwargs,
+    ) -> UptimeRobotApiResponse:
+        """Edit monitor settings via API."""
