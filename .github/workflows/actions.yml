@@ -21,9 +21,10 @@ jobs:
         id: python
         with:
           python-version: 3.x
+          cache: "pip"
 
       - name: 📦 Install dependencies
-        run:  make requirements
+        run:  scripts/setup
 
       - name: 🖤 Lint with Black
         run:  black . --check
@@ -46,17 +47,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
       - name: 📦 Install dependencies
-        run:  make requirements
+        run:  scripts/setup
 
       - name: 🏃 Run tests
-        run:  make test
+        run:  scripts/test
 
       - name: 📤 Upload coverage to Codecov
         if: ${{ matrix.python-version == '3.8' }}
         run: |
-          make coverage
+          scripts/coverage
           curl -sfSL https://codecov.io/bash | bash -
 
   release-drafter:
