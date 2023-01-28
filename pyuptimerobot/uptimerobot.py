@@ -14,15 +14,19 @@ class UptimeRobot:
         self._session: ClientSession = session
 
     @api_request("/getMonitors")
-    async def async_get_monitors(self, **kwargs) -> UptimeRobotApiResponse:
+    async def async_get_monitors(  # type: ignore[empty-body]
+        self, **kwargs
+    ) -> UptimeRobotApiResponse:
         """Get monitors from API."""
 
     @api_request("/getAccountDetails")
-    async def async_get_account_details(self, **kwargs) -> UptimeRobotApiResponse:
+    async def async_get_account_details(  # type: ignore[empty-body]
+        self, **kwargs
+    ) -> UptimeRobotApiResponse:
         """Get account details from API."""
 
     @api_request("/editMonitor")
-    async def async_edit_monitor(
+    async def async_edit_monitor(  # type: ignore[empty-body]
         self,
         id: int,
         **kwargs,

@@ -21,9 +21,10 @@ jobs:
         id: python
         with:
           python-version: 3.x
+          cache: "pip"
 
       - name: 📦 Install dependencies
-        run:  make requirements
+        run:  scripts/setup
 
       - name: 🖤 Lint with Black
         run:  black . --check
@@ -37,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10.0-alpha - 3.10.0"]
+        python-version: [3.8, 3.9, "3.10"]
     steps:
       - name: 📥 Checkout the repository
         uses: actions/checkout@v3
@@ -46,52 +47,19 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
       - name: 📦 Install dependencies
-        run:  make requirements
+        run:  scripts/setup
 
       - name: 🏃 Run tests
-        run:  make test
+        run:  scripts/test
 
       - name: 📤 Upload coverage to Codecov
         if: ${{ matrix.python-version == '3.8' }}
         run: |
-          make coverage
+          scripts/coverage
           curl -sfSL https://codecov.io/bash | bash -
-
-  release-drafter:
-    name: Release Drafter
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout the repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: ⏭️ Get next version
-        id: version
-        run: |
-          declare -i newpost
-          latest=$(git describe --tags $(git rev-list --tags --max-count=1))
-          latestpre=$(echo "$latest" | awk '{split($0,a,"."); print a[1] "." a[2]}')
-          datepre=$(date --utc '+%y.%-m')
-          if [[ "$latestpre" == "$datepre" ]]; then
-              latestpost=$(echo "$latest" | awk '{split($0,a,"."); print a[3]}')
-              newpost=$latestpost+1
-          else
-              newpost=0
-          fi
-          echo Current version:    $latest
-          echo New target version: $datepre.$newpost
-          echo "::set-output name=version::$datepre.$newpost"
-
-      - name: 🏃 Run Release Drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          tag: ${{ steps.version.outputs.version }}
-          name: ${{ steps.version.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test-install:
     name: Test install with Python ${{ matrix.python-version }}

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+python3 -m isort .
+python3 -m black --fast pyuptimerobot tests
+python3 -m mypy pyuptimerobot
