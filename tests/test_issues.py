@@ -78,7 +78,6 @@ async def test_bad_status_code(aresponses):
 async def test_client_error():
     """test_bad_status_code."""
     with patch("aiohttp.ClientSession._request", side_effect=aiohttp.ClientError):
-
         async with aiohttp.ClientSession() as session:
             client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
             with pytest.raises(UptimeRobotConnectionException):
@@ -90,7 +89,6 @@ async def test_client_error():
 async def test_timeout_error():
     """test_timeout_error."""
     with patch("aiohttp.ClientSession._request", side_effect=asyncio.TimeoutError):
-
         async with aiohttp.ClientSession() as session:
             client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
             with pytest.raises(UptimeRobotConnectionException):
@@ -104,7 +102,6 @@ async def test_uptime_robot_connection_exception():
     with patch(
         "aiohttp.ClientSession._request", side_effect=UptimeRobotConnectionException
     ):
-
         async with aiohttp.ClientSession() as session:
             client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
             with pytest.raises(UptimeRobotConnectionException):
@@ -116,7 +113,6 @@ async def test_uptime_robot_connection_exception():
 async def test_uptime_robot_exception():
     """test_uptime_robot_exception."""
     with patch("aiohttp.ClientSession._request", side_effect=UptimeRobotException):
-
         async with aiohttp.ClientSession() as session:
             client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
             with pytest.raises(UptimeRobotException):
@@ -128,7 +124,6 @@ async def test_uptime_robot_exception():
 async def test_exception():
     """test_uptime_robot_exception."""
     with patch("aiohttp.ClientSession._request", side_effect=Exception):
-
         async with aiohttp.ClientSession() as session:
             client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
             with pytest.raises(UptimeRobotException):
