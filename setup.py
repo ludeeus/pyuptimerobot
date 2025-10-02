@@ -17,7 +17,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    version="main",
+    version="0.0.0",
     description="Python API wrapper for Uptime Robot.",
     install_requires=["aiohttp>=3.6.1,<4.0"],
     keywords=["homeassistant", "version", "update"],
@@ -26,6 +26,6 @@ setup(
     long_description=readme,
     name="pyuptimerobot",
     packages=find_packages(include=["pyuptimerobot", "pyuptimerobot*"]),
-    python_requires=">=3.8.0",
+    python_requires=">=3.9.0",
     url="https://github.com/ludeeus/pyuptimerobot",
 )

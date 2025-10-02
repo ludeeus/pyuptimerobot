@@ -1,19 +1,10 @@
 """Uptime Robot models"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
-
-
-class MonitorType(Enum):
-    """Monitors type."""
-
-    HTTP = 1
-    keyword = 2
-    ping = 3
-    port = 4
-    heartbeat = 5
 
 
 class APIStatus(str, Enum):
@@ -92,22 +83,20 @@ class UptimeRobotMonitor(UptimeRobotBaseModel):
     """Monitor model for Uptime Robot."""
 
     id: int = 0
-    friendly_name: str = ""
+    friendlyname: str = ""
     url: str = ""
-    type: MonitorType = MonitorType.HTTP
+    type: str = ""
     interval: int = 0
-    status: int = 0
+    status: str = ""
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> UptimeRobotMonitor:
         """Generate object from json."""
         obj: dict[str, Any] = {}
         for key, value in data.items():
-            if hasattr(UptimeRobotMonitor, key):
-                obj[key] = value
-
-        if obj.get("type"):
-            obj["type"] = MonitorType(obj["type"])
+            k = key.lower()
+            if hasattr(UptimeRobotMonitor, k):
+                obj[k] = value
 
         return UptimeRobotMonitor(**obj)
 
@@ -126,7 +115,7 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel):
     @staticmethod
     def from_dict(data: dict[str, Any]) -> UptimeRobotApiResponse:
         """Generate object from json."""
-        obj: dict[str, Any] = {"status": APIStatus(data["stat"])}
+        obj: dict[str, Any] = {"status": APIStatus(data.get("stat", "ok"))}
         if obj["status"] == APIStatus.FAIL:
             obj["error"] = UptimeRobotApiError.from_dict(data["error"])
         else:
@@ -137,12 +126,11 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel):
             if "pagination" in data:
                 obj["pagination"] = UptimeRobotPagination.from_dict(data["pagination"])
 
-            if "monitors" in data:
+            if "monitors" in data["_api_path"]:
                 obj["data"] = [
-                    UptimeRobotMonitor.from_dict(monitor)
-                    for monitor in data["monitors"]
+                    UptimeRobotMonitor.from_dict(monitor) for monitor in data["data"]
                 ]
-            if "account" in data:
-                obj["data"] = UptimeRobotAccount.from_dict(data["account"])
+            else:
+                obj["data"] = UptimeRobotAccount.from_dict(data)
 
         return UptimeRobotApiResponse(**obj)
