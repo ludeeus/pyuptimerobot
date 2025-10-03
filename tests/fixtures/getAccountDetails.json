@@ -1,12 +1,11 @@
 {
-    "stat": "ok",
-    "account": {
-        "email": "test@domain.com",
-        "user_id": 1234567890,
-        "monitor_limit": 50,
-        "monitor_interval": 1,
-        "up_monitors": 1,
-        "down_monitors": 0,
-        "paused_monitors": 2
-    }
+  "email": "test@domain.com",
+  "fullName": "Test User",
+  "monitorsCount": 3,
+  "monitorLimit": 50,
+  "smsCredits": 0,
+  "activeSubscription": {
+    "plan": "FREE",
+    "monitorLimit": 50
+  }
 }
