@@ -24,7 +24,7 @@ jobs:
       - name: 🔢 Set version number
         run: |
           export version=${{ github.ref }}
-          sed -i "s|main|${version##*/}|" ./setup.py
+          sed -i 's|version="0"|version="'"${version##*/}"'"|' ./setup.py
           cat ./setup.py
 
       - name: 🚀 Publish to PyPi
