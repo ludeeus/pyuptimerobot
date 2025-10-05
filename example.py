@@ -1,4 +1,5 @@
 """Example usage of pyuptimerobot."""
+
 import asyncio
 
 import aiohttp
