@@ -27,7 +27,7 @@ def api_request(api_path: str, with_id: bool = False, method: str = "GET"):
             client: UptimeRobot = args[0]
             url = f"{API_BASE_URL}{api_path}"
             if with_id:
-                if not (id:=kwargs.get("monitor_id")):
+                if not (id := kwargs.get("monitor_id")):
                     raise exceptions.UptimeRobotException("Monitor ID is required")
                 url = f"{url}/{id}"
             headers = {
@@ -76,7 +76,12 @@ def api_request(api_path: str, with_id: bool = False, method: str = "GET"):
             LOGGER.debug("Requesting %s returned %s", url, result)
 
             response = UptimeRobotApiResponse.from_dict(
-                {**result, "_api_path": api_path, "_with_id": with_id, "_method": method}
+                {
+                    **result,
+                    "_api_path": api_path,
+                    "_with_id": with_id,
+                    "_method": method,
+                }
             )
 
             if response.status == APIStatus.FAIL and response.error:
