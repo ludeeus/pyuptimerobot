@@ -17,6 +17,21 @@
       "problemMatcher": []
     }, 
     {
+      "label": "Tests",
+      "detail": "Run tests.",
+      "type": "shell",
+      "command": "./scripts/test",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Lint",
       "detail": "Run linters.",
       "type": "shell",
