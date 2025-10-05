@@ -10,27 +10,28 @@ jobs:
     name: Deploy to PyPi
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5.0.0
 
       - name: 🛠 Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         id: python
         with:
           python-version: 3.x
 
-      - name: 📦 Install dependencies
-        run:  python3 -m pip install setuptools wheel twine
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+        with:
+          version: "0.8.22"
 
-      - name: 🔢 Set version number
-        run: |
-          export version=${{ github.ref }}
-          sed -i 's|version="0"|version="'"${version##*/}"'"|' ./setup.py
-          cat ./setup.py
+      - name: Set version number
+        run: scripts/set-version ${{ github.event.release.tag_name }}
+
+      - name: Build
+        run: uv build
 
       - name: 🚀 Publish to PyPi
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          python setup.py sdist bdist_wheel
-          twine upload dist/*
+          uv tool run twine upload dist/*

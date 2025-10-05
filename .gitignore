@@ -10,6 +10,8 @@ pyvenv.cfg
 RESPONSES
 .vscode/settings.json
 coverage.xml
-build
+build/
 dist
 .coverage
+.venv
+uv.lock

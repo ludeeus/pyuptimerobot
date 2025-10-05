@@ -8,29 +8,38 @@ on:
     branches:
       - main
 
+permissions: {}
+
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5.0.0
 
       - name: 🛠 Set up Python 3
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         id: python
         with:
           python-version: 3.x
-          cache: "pip"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+        with:
+          version: "0.8.22"
 
       - name: 📦 Install dependencies
-        run:  scripts/setup
+        run: scripts/bootstrap
 
       - name: 🖤 Lint with Black
-        run:  black . --check
+        run: uv run --dev black --check --fast pyuptimerobot tests
 
-      - name: 🦭 Lint with mypy
-        run:  mypy pyuptimerobot
+      - name: 🐍 Lint with mypy
+        run: uv run --dev mypy pyuptimerobot
+
+      - name: 🔤 Lint with isort
+        run: uv run --dev isort pyuptimerobot tests --check-only
 
   test:
     name: Test with Python ${{ matrix.python-version }}
@@ -41,44 +50,51 @@ jobs:
         python-version: ["3.13"]
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5.0.0
 
       - name: 🛠️ Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+        with:
+          version: "0.8.22"
 
       - name: 📦 Install dependencies
-        run:  scripts/setup
+        run: scripts/bootstrap
 
       - name: 🏃 Run tests
-        run:  scripts/test
+        run: scripts/test
+
+      - name: 🛠 Build
+        run: scripts/build
+
+  coverage:
+    name: Upload coverage to Codecov
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout the repository
+        uses: actions/checkout@v5.0.0
+        with:
+          fetch-depth: 0
+
+      - name: 🛠️ Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e  # v6.8.0
+        with:
+          version: "0.8.22"
+
+      - name: 📦 Install dependencies
+        run: scripts/bootstrap
 
       - name: 📤 Upload coverage to Codecov
-        if: ${{ matrix.python-version == '3.13' }}
         run: |
           scripts/coverage
           curl -sfSL https://codecov.io/bash | bash -
-
-  test-install:
-    name: Test install with Python ${{ matrix.python-version }}
-    needs: lint
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.13"]
-    steps:
-      - name: 📥 Checkout the repository
-        uses: actions/checkout@v3
-
-      - name: 🛠️ Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: 📦 Install dependencies
-        run:  python3 -m pip install --upgrade pip setuptools
-        
-      - name: 🏃 Run setup
-        run:  python3 setup.py install
