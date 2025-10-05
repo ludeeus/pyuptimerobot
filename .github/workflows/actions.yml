@@ -78,7 +78,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: 📦 Install dependencies
-        run:  python3 -m pip install setuptools
+        run:  python3 -m pip install --upgrade pip setuptools
         
       - name: 🏃 Run setup
         run:  python3 setup.py install
