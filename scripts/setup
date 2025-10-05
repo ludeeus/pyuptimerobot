@@ -8,4 +8,4 @@ cd "$(dirname "$0")/.."
 
 scripts/bootstrap
 
-echo "==> App is now ready to go!"
+echo "==> Project is now ready to go!"

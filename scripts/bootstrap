@@ -6,7 +6,7 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-echo "==> Installing uv if not present..."
+echo "==> Checking for uv..."
 if ! command -v uv >/dev/null 2>&1; then
   echo "UV not found, re-build the devcontainer..."
   exit 1
