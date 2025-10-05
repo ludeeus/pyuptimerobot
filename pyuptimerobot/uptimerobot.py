@@ -24,7 +24,7 @@ class UptimeRobot:
     async def async_get_account_details(self, **kwargs) -> UptimeRobotApiResponse:  # type: ignore[empty-body]
         """Get account details from API."""
 
-    @api_request("/monitors/edit", method="PATCH")
+    @api_request("/monitors", with_id=True, method="PATCH")
     async def async_edit_monitor(  # type: ignore[empty-body]
         self,
         id: int,

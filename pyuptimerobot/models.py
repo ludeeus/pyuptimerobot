@@ -103,8 +103,10 @@ class UptimeRobotMonitor(UptimeRobotBaseModel):
 class UptimeRobotApiResponse(UptimeRobotBaseModel):
     """API response model for Uptime Robot."""
 
-    _method: str | None = None
     _api_path: str | None = None
+    _with_id: bool | None = None
+    _method: str | None = None
+
     status: APIStatus = APIStatus.FAIL
     error: UptimeRobotApiError | None = None
     data: list[UptimeRobotMonitor] | UptimeRobotAccount | None = None
@@ -124,7 +126,7 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel):
             if "pagination" in data:
                 obj["pagination"] = UptimeRobotPagination.from_dict(data["pagination"])
 
-            if "monitors" in data["_api_path"]:
+            if "monitors" in data["_api_path"] and not data["_with_id"]:
                 obj["data"] = [
                     UptimeRobotMonitor.from_dict(monitor) for monitor in data["data"]
                 ]

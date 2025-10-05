@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from .uptimerobot import UptimeRobot
 
 
-def api_request(api_path: str, method: str = "GET"):
+def api_request(api_path: str, with_id: bool = False, method: str = "GET"):
     """Decorator for Uptime Robot API request"""
 
     def decorator(func):
@@ -26,6 +26,10 @@ def api_request(api_path: str, method: str = "GET"):
             """Wrapper"""
             client: UptimeRobot = args[0]
             url = f"{API_BASE_URL}{api_path}"
+            if with_id:
+                if not (id:=kwargs.get("monitor_id")):
+                    raise exceptions.UptimeRobotException("Monitor ID is required")
+                url = f"{url}/{id}"
             headers = {
                 "Authorization": f"Bearer {client._api_key}",
                 **API_HEADERS,
@@ -72,7 +76,7 @@ def api_request(api_path: str, method: str = "GET"):
             LOGGER.debug("Requesting %s returned %s", url, result)
 
             response = UptimeRobotApiResponse.from_dict(
-                {**result, "_api_path": api_path, "_method": method}
+                {**result, "_api_path": api_path, "_with_id": with_id, "_method": method}
             )
 
             if response.status == APIStatus.FAIL and response.error:

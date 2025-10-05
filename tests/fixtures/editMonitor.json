@@ -1,5 +1,5 @@
 {
-  "type": null,
+  "type": "HTTP",
   "interval": 30,
   "sslBrand": "string",
   "sslExpiryDateTime": null,
@@ -147,7 +147,7 @@
   ],
   "id": 1234,
   "friendlyName": "A",
-  "status": null,
+  "status": "paused",
   "url": "string",
   "regionalData": {
     "REGION": [
