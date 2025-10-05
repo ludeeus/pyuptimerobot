@@ -17,7 +17,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    version="main",
+    version="0",
     description="Python API wrapper for Uptime Robot.",
     install_requires=["aiohttp>=3.6.1,<4.0"],
     keywords=["homeassistant", "version", "update"],
