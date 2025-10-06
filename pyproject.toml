@@ -33,7 +33,7 @@ Repository = "https://github.com/ludeeus/pyuptimerobot"
 
 [project.optional-dependencies]
 dev = [
-    "aresponses==2.1.6",
+    "aresponses==3.0.0",
     "black==25.9.0",
     "isort==6.1.0",
     "mypy==1.18.2",
