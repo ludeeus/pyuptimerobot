@@ -26,7 +26,7 @@ jobs:
           version: "0.8.22"
 
       - name: Set version number
-        run: scripts/set-version ${{ github.event.release.tag_name }}
+        run: scripts/set-version "${{ github.event.release.tag_name }}"  # See below for shell expansion
 
       - name: Build
         run: scripts/build
