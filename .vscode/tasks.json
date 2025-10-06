@@ -15,7 +15,7 @@
         "panel": "new"
       },
       "problemMatcher": []
-    }, 
+    },
     {
       "label": "Tests",
       "detail": "Run tests.",
