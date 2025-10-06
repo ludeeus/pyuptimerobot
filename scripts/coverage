@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-python3 -m pytest tests -rxf -x -v -l --cov=./ --cov-report=xml > /dev/null
-coverage report
+# script/coverage: Run tests and generate coverage reports
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "==> Running coverage analysis..."
+uv run --dev pytest tests -rxf -x -v -l --cov=./ --cov-report=xml > /dev/null
+uv run --dev coverage report
+
+echo "==> Coverage analysis completed!"
