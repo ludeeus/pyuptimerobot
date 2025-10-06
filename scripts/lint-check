@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# script/lint-check: Check linting without making changes.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "==> Checking linting..."
+
+echo "==> Checking isort..."
+uv run --dev isort pyuptimerobot tests --check-only
+
+echo "==> Checking black..."
+uv run --dev black --check --fast pyuptimerobot tests
+
+echo "==> Checking mypy..."
+uv run --dev mypy pyuptimerobot
+
+echo "==> Linting check completed!"
