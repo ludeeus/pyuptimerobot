@@ -14,8 +14,8 @@ async def test_async_edit_monitor(aresponses):
     """test_async_edit_monitor."""
     aresponses.add(
         "api.uptimerobot.com",
-        "/v2/editMonitor",
-        "post",
+        "/v3/monitors/1234",
+        "patch",
         aresponses.Response(
             text=fixture("editMonitor", False),
             status=200,
@@ -23,7 +23,9 @@ async def test_async_edit_monitor(aresponses):
         ),
     )
 
+    status = "paused"
+
     async with aiohttp.ClientSession() as session:
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
-        result = await client.async_edit_monitor(monitor_id=777749809, **{"status": 0})
-        assert result.status == APIStatus.OK
+        result = await client.async_edit_monitor(monitor_id=1234, **{"status": status})
+        assert result.status == status
