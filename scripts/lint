@@ -1,20 +1,3 @@
 #!/bin/sh
 
-# script/lint: Run linting tools and apply formatting
-
-set -e
-
-cd "$(dirname "$0")/.."
-
-echo "==> Running linting tools..."
-
-echo "==> Running isort..."
-uv run --dev isort pyuptimerobot tests
-
-echo "==> Running black..."
-uv run --dev black --fast pyuptimerobot tests
-
-echo "==> Running mypy..."
-uv run --dev mypy pyuptimerobot
-
-echo "==> Linting completed!"
+pre-commit
