@@ -18,16 +18,16 @@ jobs:
       - name: 📥 Checkout the repository
         uses: actions/checkout@v5
 
-      - name: 🛠 Set up Python 3
+      - name: 🛠 Set up Python 3.14
         uses: actions/setup-python@v6
         id: python
         with:
-          python-version: 3.x
+          python-version: "3.14"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@eb1897b8dc4b5d5bfe39a428a8f2304605e0983c  # v7.0.0
+        uses: astral-sh/setup-uv@3259c6206f993105e3a61b142c2d97bf4b9ef83d  # v7.1.0
         with:
-          version: "0.9.1"
+          version: "0.9.3"
 
       - name: 📦 Install dependencies
         run: scripts/bootstrap
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.13"]
+        python-version: ["3.14"]
     steps:
       - name: 📥 Checkout the repository
         uses: actions/checkout@v5
@@ -58,9 +58,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install uv
-        uses: astral-sh/setup-uv@eb1897b8dc4b5d5bfe39a428a8f2304605e0983c  # v7.0.0
+        uses: astral-sh/setup-uv@3259c6206f993105e3a61b142c2d97bf4b9ef83d  # v7.1.0
         with:
-          version: "0.9.1"
+          version: "0.9.3"
 
       - name: 📦 Install dependencies
         run: scripts/bootstrap
@@ -81,15 +81,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🛠️ Set up Python
+      - name: 🛠️ Set up Python 3.14
         uses: actions/setup-python@v6
         with:
-          python-version: 3.x
+          python-version: "3.14"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@eb1897b8dc4b5d5bfe39a428a8f2304605e0983c  # v7.0.0
+        uses: astral-sh/setup-uv@3259c6206f993105e3a61b142c2d97bf4b9ef83d  # v7.1.0
         with:
-          version: "0.9.1"
+          version: "0.9.3"
 
       - name: 📦 Install dependencies
         run: scripts/bootstrap
