@@ -1,4 +1,12 @@
-#!/bin/sh
+#script/setup: Set up project for first-time use after cloning
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+scripts/bootstrap
 
 python3 -m pip --disable-pip-version-check install -r requirements.txt
 pre-commit install
+
+echo "==> Project is now ready to go!"
