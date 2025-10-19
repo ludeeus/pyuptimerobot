@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # script/setup: Set up project for first-time use after cloning
 
 set -e
