@@ -1,102 +1,209 @@
 {
-    "stat": "ok",
-    "pagination": {
-        "offset": 0,
-        "limit": 50,
-        "total": 2
-    },
-    "monitors": [
-        {
-            "id": 777749809,
-            "friendly_name": "Google",
-            "url": "http://www.google.com",
-            "type": 1,
-            "sub_type": "",
-            "keyword_type": "",
-            "keyword_value": "",
-            "http_username": "",
-            "http_password": "",
-            "port": "",
-            "interval": 900,
-            "status": 1,
-            "create_datetime": 1462565497,
-            "monitor_group": 0,
-            "is_group_main": 0,
-            "logs": [
-                {
-                    "type": 98,
-                    "datetime": 1463540297,
-                    "duration": 1054134
-                }
-            ]
+  "nextLink": "string",
+  "data": [
+    {
+      "type": null,
+      "interval": 30,
+      "sslBrand": "string",
+      "sslExpiryDateTime": null,
+      "domainExpireDate": null,
+      "checkSSLErrors": false,
+      "sslExpirationReminder": false,
+      "domainExpirationReminder": false,
+      "followRedirections": false,
+      "authType": null,
+      "httpUsername": "string",
+      "httpPassword": "string",
+      "customHttpHeaders": {
+        "property1": "string",
+        "property2": "string"
+      },
+      "httpMethodType": null,
+      "successHttpResponseCodes": [
+        "string"
+      ],
+      "timeout": 0,
+      "postValueData": "string",
+      "postValueType": "KEY_VALUE",
+      "port": 0,
+      "gracePeriod": 0,
+      "keywordValue": "AAAAAA",
+      "keywordCaseType": 0,
+      "keywordType": null,
+      "responseTimeThreshold": 0,
+      "config": {
+        "dnsRecords": {
+          "CNAME": [
+            "string"
+          ],
+          "MX": [
+            "string"
+          ],
+          "NS": [
+            "string"
+          ],
+          "A": [
+            "string"
+          ],
+          "AAAA": [
+            "string"
+          ],
+          "TXT": [
+            "string"
+          ],
+          "SRV": [
+            "string"
+          ],
+          "PTR": [
+            "string"
+          ],
+          "SOA": [
+            "string"
+          ],
+          "SPF": [
+            "string"
+          ],
+          "DNSKEY": [
+            "string"
+          ],
+          "DS": [
+            "string"
+          ],
+          "NSEC": [
+            "string"
+          ],
+          "NSEC3": [
+            "string"
+          ]
         },
+        "sslExpirationPeriodDays": [
+          0
+        ]
+      },
+      "maintenanceWindows": [
         {
-            "id": 777749807,
-            "friendly_name": "Google",
-            "url": "http://www.google.com",
-            "type": 4,
-            "sub_type": "",
-            "keyword_type": "",
-            "keyword_value": "",
-            "http_username": "",
-            "http_password": "",
-            "port": "443",
-            "interval": 900,
-            "status": 1,
-            "create_datetime": 1462565497,
-            "monitor_group": 0,
-            "is_group_main": 0,
-            "logs": [
-                {
-                    "type": 98,
-                    "datetime": 1463540297,
-                    "duration": 1054134
-                }
-            ]
-        },
-        {
-            "id": 777712827,
-            "friendly_name": "My Web Page",
-            "url": "http://mywebpage.com/",
-            "type": 1,
-            "sub_type": "",
-            "keyword_type": "",
-            "keyword_value": "",
-            "http_username": "",
-            "http_password": "",
-            "port": "",
-            "interval": 60,
-            "status": 2,
-            "create_datetime": 1462465496,
-            "monitor_group": 0,
-            "is_group_main": 0,
-            "logs": [
-                {
-                    "type": 98,
-                    "datetime": 1462465202,
-                    "duration": 32
-                },
-                {
-                    "type": 1,
-                    "datetime": 1462465234,
-                    "duration": 490140
-                },
-                {
-                    "type": 2,
-                    "datetime": 1462955374,
-                    "duration": 85
-                },
-                {
-                    "type": 99,
-                    "datetime": 1462955588,
-                    "duration": 12
-                },
-                {
-                    "type": 98,
-                    "datetime": 1462955600,
-                    "duration": 22
-                }
-            ]
+          "id": 0,
+          "userId": 0,
+          "name": "AAA",
+          "interval": "once",
+          "date": "string",
+          "time": "00:00:00",
+          "duration": 1,
+          "autoAddMonitors": false,
+          "days": [
+            0
+          ],
+          "status": "active",
+          "created": null
         }
-    ]
+      ],
+      "psps": [
+        {
+          "id": 0,
+          "friendlyName": "A",
+          "customDomain": "string",
+          "isPasswordSet": false,
+          "monitorIds": [
+            0
+          ],
+          "monitorsCount": 0,
+          "status": null,
+          "urlKey": "A",
+          "homepageLink": "AAA",
+          "gaCode": "string",
+          "shareAnalyticsConsent": false,
+          "useSmallCookieConsentModal": false,
+          "icon": "string",
+          "noIndex": false,
+          "logo": "string",
+          "hideUrlLinks": false,
+          "subscription": false,
+          "showCookieBar": false,
+          "pinnedAnnouncementId": 0,
+          "customSettings": {
+            "font": {
+              "family": "string"
+            },
+            "page": {
+              "layout": "string",
+              "theme": "light",
+              "density": "normal"
+            },
+            "colors": {
+              "main": "string",
+              "text": "string",
+              "link": "string"
+            },
+            "features": {
+              "showBars": "true",
+              "showUptimePercentage": "true",
+              "enableFloatingStatus": "true",
+              "showOverallUptime": "true",
+              "showOutageUpdates": "true",
+              "showOutageDetails": "true",
+              "enableDetailsPage": "true",
+              "showMonitorURL": "true",
+              "hidePausedMonitors": "true"
+            }
+          }
+        }
+      ],
+      "id": 0,
+      "friendlyName": "A",
+      "status": null,
+      "url": "string",
+      "regionalData": {
+        "REGION": [
+          "na"
+        ],
+        "MANUAL_SELECTED": false,
+        "INFRASTRUCTURE": "Legacy"
+      },
+      "currentStateDuration": 0,
+      "lastIncidentId": 0,
+      "userId": 0,
+      "tags": [
+        {
+          "id": 0,
+          "name": "A",
+          "color": "A",
+          "monitors": [
+            {
+              "id": 0,
+              "friendlyName": "A",
+              "status": null,
+              "url": "string"
+            }
+          ]
+        }
+      ],
+      "assignedAlertContacts": [
+        {
+          "alertContactId": "string",
+          "threshold": 0,
+          "recurrence": 0
+        }
+      ],
+      "lastIncident": {
+        "id": 0,
+        "status": null,
+        "cause": 0,
+        "reason": "string",
+        "startedAt": null,
+        "duration": 0
+      },
+      "lastDayUptimes": {
+        "bucketSize": 0,
+        "histogram": [
+          {
+            "timestamp": 0,
+            "uptime": 0
+          }
+        ]
+      },
+      "createDateTime": null,
+      "apiKey": "string",
+      "groupId": 0
+    }
+  ]
 }

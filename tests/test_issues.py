@@ -20,8 +20,8 @@ async def test_api_key_error(aresponses):
     """test_api_key_error."""
     aresponses.add(
         "api.uptimerobot.com",
-        "/v2/getMonitors",
-        "post",
+        "/v3/monitors",
+        "get",
         aresponses.Response(
             text=fixture("bad_api_key", False),
             status=200,
@@ -30,8 +30,8 @@ async def test_api_key_error(aresponses):
     )
     aresponses.add(
         "api.uptimerobot.com",
-        "/v2/getMonitors",
-        "post",
+        "/v3/monitors",
+        "get",
         aresponses.Response(
             text=fixture("missing_api_key", False),
             status=200,
@@ -55,8 +55,8 @@ async def test_bad_status_code(aresponses):
     """test_bad_status_code."""
     aresponses.add(
         "api.uptimerobot.com",
-        "/v2/getMonitors",
-        "post",
+        "/v3/monitors",
+        "get",
         aresponses.Response(
             text=fixture("getMonitors", False),
             status=500,
@@ -68,7 +68,7 @@ async def test_bad_status_code(aresponses):
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
         with pytest.raises(
             UptimeRobotConnectionException,
-            match="Request for 'https://api.uptimerobot.com/v2/getMonitors' failed with status code '500'",
+            match="Request for 'https://api.uptimerobot.com/v3/monitors' failed with status code '500'",
         ):
             result = await client.async_get_monitors()
             assert result is None

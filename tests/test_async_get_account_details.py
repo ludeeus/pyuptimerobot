@@ -13,8 +13,8 @@ async def test_async_get_account_details(aresponses):
     """test_async_get_account_details."""
     aresponses.add(
         "api.uptimerobot.com",
-        "/v2/getAccountDetails",
-        "post",
+        "/v3/user/me",
+        "get",
         aresponses.Response(
             text=fixture("getAccountDetails", False),
             status=200,
@@ -27,4 +27,4 @@ async def test_async_get_account_details(aresponses):
         result = await client.async_get_account_details()
         assert result.status == APIStatus.OK
         assert result.data.email == "test@domain.com"
-        assert result.data.user_id == 1234567890
+        assert result.data.monitorscount == 3

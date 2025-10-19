@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from .uptimerobot import UptimeRobot
 
 
-def api_request(api_path: str, method: str = "POST"):
+def api_request(api_path: str, method: str = "GET"):
     """Decorator for Uptime Robot API request"""
 
     def decorator(func):
@@ -25,18 +25,20 @@ def api_request(api_path: str, method: str = "POST"):
         async def wrapper(*args, **kwargs):
             """Wrapper"""
             client: UptimeRobot = args[0]
-            request_data = f"api_key={client._api_key}&format=json"
             url = f"{API_BASE_URL}{api_path}"
-            if kwargs:
-                for key, value in kwargs.items():
-                    request_data += f"&{key}={value}"
-            LOGGER.debug("Requesting %s", url)
+            if "monitor_id" in kwargs:
+                url = url.format(monitor_id=kwargs.pop("monitor_id"))
+            headers = {
+                "Authorization": f"Bearer {client._api_key}",
+                **API_HEADERS,
+            }
+            LOGGER.debug("Requesting %s with payload %s", url, kwargs)
             try:
                 request = await client._session.request(
                     method=method,
                     url=url,
-                    headers=API_HEADERS,
-                    data=request_data,
+                    headers=headers,
+                    json=kwargs,
                     timeout=aiohttp.ClientTimeout(total=10),
                 )
 
@@ -75,7 +77,7 @@ def api_request(api_path: str, method: str = "POST"):
                 {**result, "_api_path": api_path, "_method": method}
             )
 
-            if response.status == APIStatus.FAIL:
+            if response.status == APIStatus.FAIL and response.error:
                 if response.error.message == "api_key parameter is missing.":
                     raise exceptions.UptimeRobotAuthenticationException(
                         "No API key was provided"

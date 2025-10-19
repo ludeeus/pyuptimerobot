@@ -13,8 +13,8 @@ async def test_async_get_monitors(aresponses):
     """test_async_get_monitors."""
     aresponses.add(
         "api.uptimerobot.com",
-        "/v2/getMonitors",
-        "post",
+        "/v3/monitors",
+        "get",
         aresponses.Response(
             text=fixture("getMonitors", False),
             status=200,
@@ -28,4 +28,4 @@ async def test_async_get_monitors(aresponses):
         assert result.status == APIStatus.OK
 
         monitor = result.data[0]
-        assert monitor.id == 777749809
+        assert monitor.id == 0
