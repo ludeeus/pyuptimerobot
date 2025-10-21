@@ -81,7 +81,7 @@ class UptimeRobotMonitor(UptimeRobotBaseModel):
     """Monitor model for Uptime Robot."""
 
     id: int = 0
-    friendlyname: str = ""
+    friendlyName: str = ""
     url: str = ""
     type: str = ""
     interval: int = 0
@@ -92,9 +92,8 @@ class UptimeRobotMonitor(UptimeRobotBaseModel):
         """Generate object from json."""
         obj: dict[str, Any] = {}
         for key, value in data.items():
-            k = key.lower()
-            if hasattr(UptimeRobotMonitor, k):
-                obj[k] = value
+            if hasattr(UptimeRobotMonitor, key):
+                obj[key] = value
 
         return UptimeRobotMonitor(**obj)
 
