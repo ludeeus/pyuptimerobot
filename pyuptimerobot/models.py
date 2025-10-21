@@ -62,16 +62,15 @@ class UptimeRobotAccount(UptimeRobotBaseModel):
     """Account model for Uptime Robot."""
 
     email: str = ""
-    monitorscount: int = 0
+    monitorsCount: int = 0
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> UptimeRobotAccount:
         """Generate object from json."""
         obj: dict[str, Any] = {}
         for key, value in data.items():
-            k = key.lower()
-            if hasattr(UptimeRobotAccount, k):
-                obj[k] = value
+            if hasattr(UptimeRobotAccount, key):
+                obj[key] = value
 
         return UptimeRobotAccount(**obj)
 
