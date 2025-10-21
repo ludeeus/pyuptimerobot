@@ -7,13 +7,6 @@ from enum import Enum
 from typing import Any
 
 
-class APIStatus(str, Enum):
-    """API status."""
-
-    OK = "ok"
-    FAIL = "fail"
-
-
 class UptimeRobotBaseModel:
     """UptimeRobotBaseModel."""
 
@@ -104,7 +97,6 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel):
     _method: str | None = None
     _api_path: str | None = None
 
-    status: APIStatus = APIStatus.FAIL
     error: UptimeRobotApiError | None = None
     data: list[UptimeRobotMonitor] | UptimeRobotAccount | None = None
     pagination: dict[str, Any] | None = None
@@ -112,22 +104,21 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel):
     @staticmethod
     def from_dict(data: dict[str, Any]) -> UptimeRobotApiResponse:
         """Generate object from json."""
-        obj: dict[str, Any] = {"status": APIStatus(data.get("stat", "ok"))}
-        if obj["status"] == APIStatus.FAIL:
-            obj["error"] = UptimeRobotApiError.from_dict(data["error"])
-        else:
-            for key, value in data.items():
-                if hasattr(UptimeRobotApiResponse, key):
-                    obj[key] = value
+        obj: dict[str, Any] = {}
+        for key, value in data.items():
+            if hasattr(UptimeRobotApiResponse, key):
+                obj[key] = value
 
-            if "pagination" in data:
-                obj["pagination"] = UptimeRobotPagination.from_dict(data["pagination"])
+        if "pagination" in data:
+            obj["pagination"] = UptimeRobotPagination.from_dict(data["pagination"])
 
-            if data["_api_path"].endswith("/monitors"):
-                obj["data"] = [
-                    UptimeRobotMonitor.from_dict(monitor) for monitor in data["data"]
-                ]
-            else:
-                obj["data"] = UptimeRobotAccount.from_dict(data)
+        if data["_api_path"].endswith("/monitors"):
+            obj["data"] = [
+                UptimeRobotMonitor.from_dict(monitor) for monitor in data["data"]
+            ]
+        if data["_api_path"].endswith("/monitors/{monitor_id}"):
+            obj["data"] = [UptimeRobotMonitor.from_dict(data)]
+        if data["_api_path"].endswith("/user/me"):
+            obj["data"] = UptimeRobotAccount.from_dict(data)
 
         return UptimeRobotApiResponse(**obj)

@@ -25,7 +25,6 @@ async def test_async_get_monitors(aresponses):
     async with aiohttp.ClientSession() as session:
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
         result = await client.async_get_monitors(**{"monitors": "123"})
-        assert result.status == APIStatus.OK
         assert isinstance(result.data, list) and all(
             isinstance(m, UptimeRobotMonitor) for m in result.data
         )

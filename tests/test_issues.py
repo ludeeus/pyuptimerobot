@@ -23,31 +23,17 @@ async def test_api_key_error(aresponses):
         "/v3/monitors",
         "get",
         aresponses.Response(
-            text=fixture("bad_api_key", False),
-            status=200,
+            text=fixture("getMonitors", False),
+            status=401,
             headers=TEST_RESPONSE_HEADERS,
         ),
     )
-    aresponses.add(
-        "api.uptimerobot.com",
-        "/v3/monitors",
-        "get",
-        aresponses.Response(
-            text=fixture("missing_api_key", False),
-            status=200,
-            headers=TEST_RESPONSE_HEADERS,
-        ),
-    )
-
-    async with aiohttp.ClientSession() as session:
-        client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
-        with pytest.raises(UptimeRobotAuthenticationException):
-            await client.async_get_monitors()
 
     async with aiohttp.ClientSession() as session:
         client = UptimeRobot(session=session, api_key="")
         with pytest.raises(UptimeRobotAuthenticationException):
-            await client.async_get_monitors()
+            result = await client.async_get_monitors()
+            assert result is None
 
 
 @pytest.mark.asyncio

@@ -6,7 +6,7 @@ import asyncio
 from typing import TYPE_CHECKING
 
 import aiohttp
-
+from http import HTTPStatus
 from pyuptimerobot import exceptions
 
 from .const import API_BASE_URL, API_HEADERS, LOGGER
@@ -42,7 +42,11 @@ def api_request(api_path: str, method: str = "GET"):
                     timeout=aiohttp.ClientTimeout(total=10),
                 )
 
-                if request.status != 200:
+                if request.status != HTTPStatus.OK:
+                    if request.status == HTTPStatus.UNAUTHORIZED:
+                        raise exceptions.UptimeRobotAuthenticationException(
+                            f"Authentication failed for '{url}' with status code '{request.status}'"
+                        )
                     raise exceptions.UptimeRobotConnectionException(
                         f"Request for '{url}' failed with status code '{request.status}'"
                     )
@@ -63,6 +67,11 @@ def api_request(api_path: str, method: str = "GET"):
                     exception
                 ) from exception
 
+            except exceptions.UptimeRobotAuthenticationException as exception:
+                raise exceptions.UptimeRobotAuthenticationException(
+                    exception
+                ) from exception
+
             except exceptions.UptimeRobotException as exception:
                 raise exceptions.UptimeRobotException(exception) from exception
 
@@ -73,24 +82,9 @@ def api_request(api_path: str, method: str = "GET"):
 
             LOGGER.debug("Requesting %s returned %s", url, result)
 
-            response = UptimeRobotApiResponse.from_dict(
+            return UptimeRobotApiResponse.from_dict(
                 {**result, "_api_path": api_path, "_method": method}
             )
-
-            if response.status == APIStatus.FAIL and response.error:
-                if response.error.message == "api_key parameter is missing.":
-                    raise exceptions.UptimeRobotAuthenticationException(
-                        "No API key was provided"
-                    )
-                elif response.error.message in (
-                    "api_key not found.",
-                    "api_key is invalid.",
-                ):
-                    raise exceptions.UptimeRobotAuthenticationException(
-                        "The provided API key is not valid"
-                    )
-
-            return response
 
         return wrapper
 
