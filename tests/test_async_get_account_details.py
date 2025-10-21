@@ -4,7 +4,7 @@ import aiohttp
 import pytest
 
 from pyuptimerobot import UptimeRobot
-from pyuptimerobot.models import APIStatus
+from pyuptimerobot.models import APIStatus, UptimeRobotAccount
 from tests.common import TEST_API_TOKEN, TEST_RESPONSE_HEADERS, fixture
 
 
@@ -26,5 +26,6 @@ async def test_async_get_account_details(aresponses):
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
         result = await client.async_get_account_details()
         assert result.status == APIStatus.OK
+        assert isinstance(result.data, UptimeRobotAccount)
         assert result.data.email == "test@domain.com"
-        assert result.data.monitorscount == 3
+        assert result.data.monitorsCount == 3
