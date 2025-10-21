@@ -10,7 +10,7 @@ from http import HTTPStatus
 from pyuptimerobot import exceptions
 
 from .const import API_BASE_URL, API_HEADERS, LOGGER
-from .models import APIStatus, UptimeRobotApiResponse
+from .models import UptimeRobotApiResponse
 
 if TYPE_CHECKING:
     from .uptimerobot import UptimeRobot
