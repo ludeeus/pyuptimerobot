@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import asyncio
+from http import HTTPStatus
 from typing import TYPE_CHECKING
 
 import aiohttp
-from http import HTTPStatus
+
 from pyuptimerobot import exceptions
 
 from .const import API_BASE_URL, API_HEADERS, LOGGER
