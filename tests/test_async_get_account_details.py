@@ -4,7 +4,7 @@ import aiohttp
 import pytest
 
 from pyuptimerobot import UptimeRobot
-from pyuptimerobot.models import APIStatus, UptimeRobotAccount
+from pyuptimerobot.models import UptimeRobotAccount
 from tests.common import TEST_API_TOKEN, TEST_RESPONSE_HEADERS, fixture
 
 
