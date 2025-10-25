@@ -112,13 +112,13 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel):
         if "pagination" in data:
             obj["pagination"] = UptimeRobotPagination.from_dict(data["pagination"])
 
-        if data["_api_path"].endswith("/monitors"):
+        if data["_api_path"] == "/monitors":
             obj["data"] = [
                 UptimeRobotMonitor.from_dict(monitor) for monitor in data["data"]
             ]
-        if data["_api_path"].endswith("/monitors/{monitor_id}"):
+        if data["_api_path"] == "/monitors/{monitor_id}":
             obj["data"] = [UptimeRobotMonitor.from_dict(data)]
-        if data["_api_path"].endswith("/user/me"):
+        if data["_api_path"] == "/user/me":
             obj["data"] = UptimeRobotAccount.from_dict(data)
 
         return UptimeRobotApiResponse(**obj)
