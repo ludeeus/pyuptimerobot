@@ -19,4 +19,3 @@ Fixes #
 - [ ] Tests pass locally (`scripts/test`)
 - [ ] Code coverage remains at 100% (`scripts/coverage`)
 - [ ] Tests added for new functionality
-- [ ] Documentation updated (if needed)
