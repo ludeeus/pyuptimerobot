@@ -29,16 +29,15 @@ def api_request(api_path: str, method: str = "GET"):
             url = f"{API_BASE_URL}{api_path}"
             if (monitor_id := kwargs.pop("monitor_id", None)) is not None:
                 url = url.format(monitor_id=monitor_id)
-            headers = {
-                "Authorization": f"Bearer {client._api_key}",
-                "Content-Type": "application/json",
-            }
             LOGGER.debug("Requesting %s with payload %s", url, kwargs)
             try:
                 request = await client._session.request(
                     method=method,
                     url=url,
-                    headers=headers,
+                    headers={
+                        "Authorization": f"Bearer {client._api_key}",
+                        "Content-Type": "application/json",
+                    },
                     json=kwargs,
                     timeout=aiohttp.ClientTimeout(total=10),
                 )

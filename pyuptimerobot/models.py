@@ -2,13 +2,30 @@
 
 from __future__ import annotations
 
+from annotationlib import get_annotations
 from dataclasses import dataclass
-from enum import Enum
-from typing import Any
+from typing import Any, Generic, TypeVar, cast
+
+from .const import API_PATH_MONITOR_DETAIL, API_PATH_MONITORS, API_PATH_USER_ME
+
+T = TypeVar("T", bound="UptimeRobotBaseModel")
+RDT = TypeVar("RDT")
 
 
+@dataclass
 class UptimeRobotBaseModel:
     """UptimeRobotBaseModel."""
+
+    @classmethod
+    def from_dict(cls: type[T], data: dict[str, Any]) -> T:
+        """Generate object from json."""
+        obj: dict[str, Any] = {}
+        classkeys = get_annotations(cls).keys()
+        for key, value in data.items():
+            if key in classkeys:
+                obj[key] = value
+
+        return cls(**obj)
 
 
 @dataclass
@@ -19,106 +36,69 @@ class UptimeRobotPagination(UptimeRobotBaseModel):
     limit: int = 0
     total: int = 0
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> UptimeRobotPagination:
-        """Generate object from json."""
-        obj: dict[str, Any] = {}
-        for key, value in data.items():
-            if hasattr(UptimeRobotPagination, key):
-                obj[key] = value
-
-        return UptimeRobotPagination(**obj)
-
-
-@dataclass
-class UptimeRobotApiError(UptimeRobotBaseModel):
-    """API error model for Uptime Robot."""
-
-    type: str = ""
-    parameter_name: str = ""
-    message: str = ""
-    passed_value: str = ""
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> UptimeRobotApiError:
-        """Generate object from json."""
-        obj: dict[str, Any] = {}
-        for key, value in data.items():
-            if hasattr(UptimeRobotApiError, key):
-                obj[key] = value
-
-        return UptimeRobotApiError(**obj)
-
 
 @dataclass
 class UptimeRobotAccount(UptimeRobotBaseModel):
     """Account model for Uptime Robot."""
 
-    email: str = ""
-    monitorsCount: int = 0
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> UptimeRobotAccount:
-        """Generate object from json."""
-        obj: dict[str, Any] = {}
-        for key, value in data.items():
-            if hasattr(UptimeRobotAccount, key):
-                obj[key] = value
-
-        return UptimeRobotAccount(**obj)
+    email: str
+    monitorsCount: int
 
 
 @dataclass
 class UptimeRobotMonitor(UptimeRobotBaseModel):
     """Monitor model for Uptime Robot."""
 
-    id: int = 0
-    friendlyName: str = ""
-    url: str = ""
-    type: str = ""
-    interval: int = 0
-    status: str = ""
-
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> UptimeRobotMonitor:
-        """Generate object from json."""
-        obj: dict[str, Any] = {}
-        for key, value in data.items():
-            if hasattr(UptimeRobotMonitor, key):
-                obj[key] = value
-
-        return UptimeRobotMonitor(**obj)
+    id: int
+    friendlyName: str
+    interval: int
+    url: str
+    status: str | None = None
+    type: str | None = None
 
 
 @dataclass
-class UptimeRobotApiResponse(UptimeRobotBaseModel):
+class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
     """API response model for Uptime Robot."""
 
-    _method: str | None = None
-    _api_path: str | None = None
+    _method: str
+    _api_path: str
 
-    error: UptimeRobotApiError | None = None
-    data: list[UptimeRobotMonitor] | UptimeRobotAccount | None = None
-    pagination: dict[str, Any] | None = None
+    data: RDT
+    pagination: UptimeRobotPagination | None = None
 
-    @staticmethod
-    def from_dict(data: dict[str, Any]) -> UptimeRobotApiResponse:
+    @classmethod
+    def from_dict(
+        cls: type[UptimeRobotApiResponse[RDT]], data: dict[str, Any]
+    ) -> UptimeRobotApiResponse[RDT]:
         """Generate object from json."""
-        obj: dict[str, Any] = {}
-        for key, value in data.items():
-            if hasattr(UptimeRobotApiResponse, key):
-                obj[key] = value
+        apipath = data.pop("_api_path")
+        method = data.pop("_method")
+        pagination = data.pop("pagination", None)
 
-        if "pagination" in data:
-            obj["pagination"] = UptimeRobotPagination.from_dict(data["pagination"])
+        def _convert_data(raw_data: dict[str, Any]) -> RDT:
+            """Convert raw API data to appropriate model type based on endpoint."""
+            if apipath == API_PATH_MONITORS:
+                return cast(
+                    RDT,
+                    [
+                        UptimeRobotMonitor.from_dict(monitor)
+                        for monitor in raw_data["data"]
+                    ],
+                )
+            elif apipath == API_PATH_MONITOR_DETAIL:
+                return cast(RDT, UptimeRobotMonitor.from_dict(raw_data))
+            elif apipath == API_PATH_USER_ME:
+                return cast(RDT, UptimeRobotAccount.from_dict(raw_data))
+            else:
+                # Fallback for unknown endpoints - return raw data
+                return cast(RDT, raw_data)
 
-        if data["_api_path"] == "/monitors":
-            obj["data"] = [
-                UptimeRobotMonitor.from_dict(monitor) for monitor in data["data"]
-            ]
-        if data["_api_path"] == "/monitors/{monitor_id}":
-            obj["data"] = [UptimeRobotMonitor.from_dict(data)]
-        if data["_api_path"] == "/user/me":
-            obj["data"] = UptimeRobotAccount.from_dict(data)
-
-        return UptimeRobotApiResponse(**obj)
+        return UptimeRobotApiResponse(
+            _api_path=apipath,
+            _method=method,
+            data=_convert_data(data),
+            pagination=(
+                UptimeRobotPagination.from_dict(pagination) if pagination else None
+            ),
+        )
