@@ -28,4 +28,5 @@ async def test_async_edit_monitor(aresponses):
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
         result = await client.async_edit_monitor(monitor_id=1234, **{"status": status})
         assert isinstance(result, UptimeRobotApiResponse)
-        assert result.data[0].status == status
+        assert isinstance(result.data, UptimeRobotMonitor)
+        assert result.data.status == status

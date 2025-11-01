@@ -19,5 +19,4 @@ async def example():
         print("Monitors:", monitors)
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(example())
+asyncio.run(example())
