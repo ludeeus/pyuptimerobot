@@ -8,4 +8,7 @@ cd "$(dirname "$0")/.."
 
 scripts/bootstrap
 
+python3 -m pip --disable-pip-version-check install -r requirements.txt
+pre-commit install
+
 echo "==> Project is now ready to go!"
