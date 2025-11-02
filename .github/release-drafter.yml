@@ -17,12 +17,15 @@ categories:
     labels:
       - 'bugfix'
   - title: '🧰 Maintenance'
+    collapse-after: 1
     labels:
       - 'maintenance'
   - title: '📚 Documentation'
+    collapse-after: 1
     labels:
       - 'documentation'
   - title: '📦 Dependencies'
+    collapse-after: 1
     labels:
       - 'dependencies'
 
