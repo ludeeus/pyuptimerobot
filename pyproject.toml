@@ -60,3 +60,6 @@ exclude_lines = ["if TYPE_CHECKING:"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["pyuptimerobot"]
+
+[tool.hatch.build.targets.sdist]
+include = ["pyuptimerobot"]
