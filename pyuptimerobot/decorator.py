@@ -62,12 +62,9 @@ def api_request(api_path: str, method: str = "GET"):
                     f"Request timeout for '{url}'"
                 ) from None
 
-            except (
-                exceptions.UptimeRobotConnectionException,
-                exceptions.UptimeRobotAuthenticationException,
-                exceptions.UptimeRobotException,
-            ) as exception:
+            except exceptions.UptimeRobotException:
                 raise
+
             except (Exception, BaseException) as exception:
                 raise exceptions.UptimeRobotException(
                     f"Unexpected exception for '{url}' with - {exception}"
