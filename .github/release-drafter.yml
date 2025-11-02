@@ -1,8 +1,41 @@
+name-template: '$RESOLVED_VERSION'
+tag-template: '$RESOLVED_VERSION'
 change-template: '- #$NUMBER $TITLE @$AUTHOR'
 sort-direction: ascending
+
+categories:
+  - title: '🚨 Breaking Changes'
+    labels:
+      - 'breaking-change'
+  - title: '✨ New Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bugfix'
+  - title: '🧰 Maintenance'
+    labels:
+      - 'maintenance'
+      - 'dependencies'
+  - title: '📚 Documentation'
+    labels:
+      - 'documentation'
+
 exclude-labels:
   - "release-drafter-ignore"
+
+version-resolver:
+  major:
+    labels:
+      - 'breaking-change'
+  minor:
+    labels:
+      - 'feature'
+      - 'enhancement'
+  default: patch
+
 template: |
-  ## What’s Changed
+  ## What's Changed
 
   $CHANGES
