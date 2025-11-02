@@ -4,23 +4,27 @@ change-template: '- #$NUMBER $TITLE @$AUTHOR'
 sort-direction: ascending
 
 categories:
-  - title: '🚨 Breaking Changes'
+  - title: '🚨 Breaking changes'
     labels:
       - 'breaking-change'
-  - title: '✨ New Features'
+  - title: '✨ New features'
     labels:
       - 'feature'
+  - title: '🔧 Enhancements'
+    labels:
       - 'enhancement'
-  - title: '🐛 Bug Fixes'
+  - title: '🐛 Bug fixes'
     labels:
       - 'bugfix'
   - title: '🧰 Maintenance'
     labels:
       - 'maintenance'
-      - 'dependencies'
   - title: '📚 Documentation'
     labels:
       - 'documentation'
+  - title: '📦 Dependencies'
+    labels:
+      - 'dependencies'
 
 exclude-labels:
   - "release-drafter-ignore"
@@ -36,6 +40,6 @@ version-resolver:
   default: patch
 
 template: |
-  ## What's Changed
+  ## What's changed
 
   $CHANGES
