@@ -65,7 +65,7 @@ def api_request(api_path: str, method: str = "GET"):
             except exceptions.UptimeRobotException:
                 raise
 
-            except (Exception, BaseException) as exception:
+            except Exception as exception:
                 raise exceptions.UptimeRobotException(
                     f"Unexpected exception for '{url}' with - {exception}"
                 ) from exception
