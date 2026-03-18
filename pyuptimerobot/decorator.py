@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from http import HTTPStatus
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, TypeVar, cast
 
 import aiohttp
 
@@ -17,15 +17,27 @@ if TYPE_CHECKING:
     from .uptimerobot import UptimeRobot
 
 
-def api_request(api_path: str, method: str = "GET"):
+ResponseDataT = TypeVar("ResponseDataT")
+
+
+def api_request(api_path: str, method: str = "GET") -> Callable[
+    [Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]],
+    Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]],
+]:
     """Decorator for Uptime Robot API request"""
 
-    def decorator(func):
+    def decorator(
+        _func: Callable[
+            ..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]
+        ],
+    ) -> Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]:
         """Decorator"""
 
-        async def wrapper(*args, **kwargs):
+        async def wrapper(
+            *args: Any, **kwargs: Any
+        ) -> UptimeRobotApiResponse[ResponseDataT]:
             """Wrapper"""
-            client: UptimeRobot = args[0]
+            client = cast("UptimeRobot", args[0])
             url = f"{API_BASE_URL}{api_path}"
             if (monitor_id := kwargs.pop("monitor_id", None)) is not None:
                 url = url.format(monitor_id=monitor_id)

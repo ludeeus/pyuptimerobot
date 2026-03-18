@@ -1,5 +1,7 @@
 """Uptime Robot client."""
 
+from typing import Any
+
 from aiohttp import ClientSession
 
 from .const import API_PATH_MONITOR_DETAIL, API_PATH_MONITORS, API_PATH_USER_ME
@@ -17,18 +19,20 @@ class UptimeRobot:
 
     @api_request(API_PATH_MONITORS)
     async def async_get_monitors(  # type: ignore[empty-body]
-        self, **kwargs
+        self, **kwargs: Any
     ) -> UptimeRobotApiResponse[list[UptimeRobotMonitor]]:
         """Get monitors from API."""
 
     @api_request(API_PATH_USER_ME)
-    async def async_get_account_details(self, **kwargs) -> UptimeRobotApiResponse[UptimeRobotAccount]:  # type: ignore[empty-body]
+    async def async_get_account_details(  # type: ignore[empty-body]
+        self, **kwargs: Any
+    ) -> UptimeRobotApiResponse[UptimeRobotAccount]:
         """Get account details from API."""
 
     @api_request(API_PATH_MONITOR_DETAIL, method="PATCH")
     async def async_edit_monitor(  # type: ignore[empty-body]
         self,
         monitor_id: int,
-        **kwargs,
+        **kwargs: Any,
     ) -> UptimeRobotApiResponse[UptimeRobotMonitor]:
         """Edit monitor settings via API."""
