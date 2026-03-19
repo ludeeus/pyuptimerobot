@@ -13,8 +13,8 @@ async def test_async_edit_monitor(aresponses):
     """test_async_edit_monitor."""
     aresponses.add(
         "api.uptimerobot.com",
-        "/v3/monitors/1234",
-        "patch",
+        "/v3/monitors/1234/paused",
+        "post",
         aresponses.Response(
             text=fixture("editMonitor", False),
             status=200,

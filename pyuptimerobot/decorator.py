@@ -10,7 +10,7 @@ import aiohttp
 
 from pyuptimerobot import exceptions
 
-from .const import API_BASE_URL, LOGGER
+from .const import API_BASE_URL, API_PATH_MONITOR_DETAIL, LOGGER
 from .models import UptimeRobotApiResponse
 
 if TYPE_CHECKING:
@@ -29,6 +29,8 @@ def api_request(api_path: str, method: str = "GET"):
             url = f"{API_BASE_URL}{api_path}"
             if (monitor_id := kwargs.pop("monitor_id", None)) is not None:
                 url = url.format(monitor_id=monitor_id)
+            if api_path == API_PATH_MONITOR_DETAIL:
+                url = f"{url}/{kwargs['status']}"
             LOGGER.debug("Requesting %s with payload %s", url, kwargs)
             try:
                 request = await client._session.request(
@@ -42,7 +44,10 @@ def api_request(api_path: str, method: str = "GET"):
                     timeout=aiohttp.ClientTimeout(total=10),
                 )
 
-                if request.status != HTTPStatus.OK:
+                if request.status not in (
+                    HTTPStatus.OK,
+                    HTTPStatus.CREATED,
+                ):
                     if request.status == HTTPStatus.UNAUTHORIZED:
                         raise exceptions.UptimeRobotAuthenticationException(
                             f"Authentication failed for '{url}' with status code '{request.status}'"
