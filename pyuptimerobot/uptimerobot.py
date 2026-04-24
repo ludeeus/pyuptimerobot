@@ -32,6 +32,7 @@ class UptimeRobot:
     @api_request(API_PATH_MONITOR_DETAIL, method="PATCH")
     async def async_edit_monitor(  # type: ignore[empty-body]
         self,
+        *,
         monitor_id: int,
         **kwargs: Any,
     ) -> UptimeRobotApiResponse[UptimeRobotMonitor]:
