@@ -2,4 +2,6 @@
 
 from .exceptions import *  # noqa: F403
 from .models import *  # noqa: F403
-from .uptimerobot import UptimeRobot as UptimeRobot
+from .uptimerobot import UptimeRobot
+
+__all__ = ["UptimeRobot"]
