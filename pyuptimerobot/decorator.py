@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import asyncio
+from collections.abc import Callable, Coroutine
 from http import HTTPStatus
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, TypeVar, cast
 
 import aiohttp
 
@@ -17,15 +17,25 @@ if TYPE_CHECKING:
     from .uptimerobot import UptimeRobot
 
 
-def api_request(api_path: str, method: str = "GET"):
+ResponseDataT = TypeVar("ResponseDataT")
+
+
+def api_request(
+    api_path: str, method: str = "GET"
+) -> Callable[
+    [Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]],
+    Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]],
+]:
     """Decorator for Uptime Robot API request"""
 
-    def decorator(func):
+    def decorator(
+        _func: Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]],
+    ) -> Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]:
         """Decorator"""
 
-        async def wrapper(*args, **kwargs):
+        async def wrapper(*args: Any, **kwargs: Any) -> UptimeRobotApiResponse[ResponseDataT]:
             """Wrapper"""
-            client: UptimeRobot = args[0]
+            client = cast("UptimeRobot", args[0])
             url = f"{API_BASE_URL}{api_path}"
             if (monitor_id := kwargs.pop("monitor_id", None)) is not None:
                 url = url.format(monitor_id=monitor_id)
@@ -50,7 +60,8 @@ def api_request(api_path: str, method: str = "GET"):
                 ):
                     if request.status == HTTPStatus.UNAUTHORIZED:
                         raise exceptions.UptimeRobotAuthenticationException(
-                            f"Authentication failed for '{url}' with status code '{request.status}'"
+                            f"Authentication failed for '{url}'"
+                            f" with status code '{request.status}'"
                         )
                     raise exceptions.UptimeRobotConnectionException(
                         f"Request for '{url}' failed with status code '{request.status}'"
@@ -62,7 +73,7 @@ def api_request(api_path: str, method: str = "GET"):
                     f"Request exception for '{url}' with - {exception}"
                 ) from exception
 
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 raise exceptions.UptimeRobotConnectionException(
                     f"Request timeout for '{url}'"
                 ) from None
