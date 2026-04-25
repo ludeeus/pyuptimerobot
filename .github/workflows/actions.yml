@@ -32,14 +32,14 @@ jobs:
       - name: 📦 Install dependencies
         run: scripts/bootstrap
 
-      - name: 🖤 Lint with Black
-        run: uv run --dev black --check --fast pyuptimerobot tests
+      - name: 🔍 Lint with Ruff
+        run: uv run --dev ruff check pyuptimerobot tests
 
-      - name: 🐍 Lint with mypy
+      - name: 🎨 Check formatting with Ruff
+        run: uv run --dev ruff format --check pyuptimerobot tests
+
+      - name: 🐍 Check types with mypy
         run: uv run --dev mypy pyuptimerobot
-
-      - name: 🔤 Lint with isort
-        run: uv run --dev isort pyuptimerobot tests --check-only
 
   test:
     name: Test with Python ${{ matrix.python-version }}
