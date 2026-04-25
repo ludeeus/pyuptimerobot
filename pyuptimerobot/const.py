@@ -10,3 +10,7 @@ ATTR_URL = "url"
 API_PATH_MONITORS = "/monitors"
 API_PATH_MONITOR_DETAIL = "/monitors/{monitor_id}"
 API_PATH_USER_ME = "/user/me"
+
+API_STATUS_PAUSE = "pause"
+API_STATUS_RESET = "reset"
+API_STATUS_START = "start"
