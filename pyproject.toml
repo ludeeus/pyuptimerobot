@@ -61,9 +61,6 @@ ignore = [
     "UP046",  # Use PEP 695 type params - keep existing Generic[] style
 ]
 
-[tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F405"]
-
 [tool.ruff.lint.isort]
 combine-as-imports = true
 force-sort-within-sections = true
