@@ -68,9 +68,7 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
     pagination: UptimeRobotPagination | None = None
 
     @classmethod
-    def from_dict(
-        cls: type[UptimeRobotApiResponse[RDT]], data: dict[str, Any]
-    ) -> UptimeRobotApiResponse[RDT]:
+    def from_dict(cls: type[UptimeRobotApiResponse[RDT]], data: dict[str, Any]) -> UptimeRobotApiResponse[RDT]:
         """Generate object from json."""
         apipath = data.pop("_api_path")
         method = data.pop("_method")
@@ -81,10 +79,7 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
             if apipath == API_PATH_MONITORS:
                 return cast(
                     RDT,
-                    [
-                        UptimeRobotMonitor.from_dict(monitor)
-                        for monitor in raw_data["data"]
-                    ],
+                    [UptimeRobotMonitor.from_dict(monitor) for monitor in raw_data["data"]],
                 )
             elif apipath == API_PATH_MONITOR_DETAIL:
                 return cast(RDT, UptimeRobotMonitor.from_dict(raw_data))
@@ -98,7 +93,5 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
             _api_path=apipath,
             _method=method,
             data=_convert_data(data),
-            pagination=(
-                UptimeRobotPagination.from_dict(pagination) if pagination else None
-            ),
+            pagination=(UptimeRobotPagination.from_dict(pagination) if pagination else None),
         )
