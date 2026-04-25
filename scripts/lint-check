@@ -8,11 +8,11 @@ cd "$(dirname "$0")/.."
 
 echo "==> Checking linting..."
 
-echo "==> Checking isort..."
-uv run --dev isort pyuptimerobot tests --check-only
+echo "==> Checking ruff format..."
+uv run --dev ruff format --check pyuptimerobot tests
 
-echo "==> Checking black..."
-uv run --dev black --check --fast pyuptimerobot tests
+echo "==> Checking ruff lint..."
+uv run --dev ruff check pyuptimerobot tests
 
 echo "==> Checking mypy..."
 uv run --dev mypy pyuptimerobot

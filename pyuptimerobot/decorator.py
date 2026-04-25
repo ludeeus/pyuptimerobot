@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import asyncio
+from collections.abc import Callable, Coroutine
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar, cast
 
 import aiohttp
 
@@ -20,7 +20,9 @@ if TYPE_CHECKING:
 ResponseDataT = TypeVar("ResponseDataT")
 
 
-def api_request(api_path: str, method: str = "GET") -> Callable[
+def api_request(
+    api_path: str, method: str = "GET"
+) -> Callable[
     [Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]],
     Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]],
 ]:
@@ -57,10 +59,12 @@ def api_request(api_path: str, method: str = "GET") -> Callable[
                 if request.status != HTTPStatus.OK:
                     if request.status == HTTPStatus.UNAUTHORIZED:
                         raise exceptions.UptimeRobotAuthenticationException(
-                            f"Authentication failed for '{url}' with status code '{request.status}'"
+                            f"Authentication failed for '{url}' "
+                            f"with status code '{request.status}'"
                         )
                     raise exceptions.UptimeRobotConnectionException(
-                        f"Request for '{url}' failed with status code '{request.status}'"
+                        f"Request for '{url}' failed "
+                        f"with status code '{request.status}'"
                     )
 
                 result = await request.json()
@@ -69,7 +73,7 @@ def api_request(api_path: str, method: str = "GET") -> Callable[
                     f"Request exception for '{url}' with - {exception}"
                 ) from exception
 
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 raise exceptions.UptimeRobotConnectionException(
                     f"Request timeout for '{url}'"
                 ) from None
