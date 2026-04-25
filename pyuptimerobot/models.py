@@ -68,7 +68,9 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
     pagination: UptimeRobotPagination | None = None
 
     @classmethod
-    def from_dict(cls: type[UptimeRobotApiResponse[RDT]], data: dict[str, Any]) -> UptimeRobotApiResponse[RDT]:
+    def from_dict(
+        cls: type[UptimeRobotApiResponse[RDT]], data: dict[str, Any]
+    ) -> UptimeRobotApiResponse[RDT]:
         """Generate object from json."""
         apipath = data.pop("_api_path")
         method = data.pop("_method")

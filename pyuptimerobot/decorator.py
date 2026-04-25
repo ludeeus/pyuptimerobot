@@ -55,7 +55,8 @@ def api_request(
                 if request.status != HTTPStatus.OK:
                     if request.status == HTTPStatus.UNAUTHORIZED:
                         raise exceptions.UptimeRobotAuthenticationException(
-                            f"Authentication failed for '{url}' with status code '{request.status}'"
+                            f"Authentication failed for '{url}'"
+                            f" with status code '{request.status}'"
                         )
                     raise exceptions.UptimeRobotConnectionException(
                         f"Request for '{url}' failed with status code '{request.status}'"
@@ -68,7 +69,9 @@ def api_request(
                 ) from exception
 
             except TimeoutError:
-                raise exceptions.UptimeRobotConnectionException(f"Request timeout for '{url}'") from None
+                raise exceptions.UptimeRobotConnectionException(
+                    f"Request timeout for '{url}'"
+                ) from None
 
             except exceptions.UptimeRobotException:
                 raise
@@ -80,7 +83,9 @@ def api_request(
 
             LOGGER.debug("Requesting %s returned %s", url, result)
 
-            return UptimeRobotApiResponse.from_dict({**result, "_api_path": api_path, "_method": method})
+            return UptimeRobotApiResponse.from_dict(
+                {**result, "_api_path": api_path, "_method": method}
+            )
 
         return wrapper
 

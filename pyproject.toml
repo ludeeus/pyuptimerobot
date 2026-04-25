@@ -46,7 +46,7 @@ dev = [
 asyncio_mode = "strict"
 
 [tool.ruff]
-line-length = 120
+line-length = 99
 target-version = "py314"
 
 [tool.ruff.lint]
@@ -60,6 +60,9 @@ select = [
 ignore = [
     "UP046",  # Use PEP 695 type params - keep existing Generic[] style
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F405"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

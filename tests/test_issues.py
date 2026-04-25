@@ -54,7 +54,10 @@ async def test_bad_status_code(aresponses):
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
         with pytest.raises(
             UptimeRobotConnectionException,
-            match="Request for 'https://api.uptimerobot.com/v3/monitors' failed with status code '500'",
+            match=(
+                "Request for 'https://api.uptimerobot.com/v3/monitors'"
+                " failed with status code '500'"
+            ),
         ):
             result = await client.async_get_monitors()
             assert result is None
