@@ -8,6 +8,7 @@ from pyuptimerobot import UptimeRobot
 
 API_KEY = ""
 
+
 async def example():
     """Example usage of pyuptimerobot."""
     async with aiohttp.ClientSession() as session:
@@ -16,5 +17,6 @@ async def example():
         monitors = await api.async_get_monitors()
         print("Account:", account)
         print("Monitors:", monitors)
+
 
 asyncio.run(example())
