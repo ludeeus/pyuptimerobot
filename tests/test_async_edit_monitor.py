@@ -4,6 +4,7 @@ import aiohttp
 import pytest
 
 from pyuptimerobot import UptimeRobot, UptimeRobotApiResponse, UptimeRobotMonitor
+from pyuptimerobot.const import API_MONITOR_ACTION_PAUSE, API_STATUS_PAUSED
 
 from .common import TEST_API_TOKEN, TEST_RESPONSE_HEADERS, fixture
 
@@ -13,7 +14,7 @@ async def test_async_edit_monitor(aresponses):
     """test_async_edit_monitor."""
     aresponses.add(
         "api.uptimerobot.com",
-        "/v3/monitors/1234/pause",
+        f"/v3/monitors/1234/{API_MONITOR_ACTION_PAUSE}",
         "post",
         aresponses.Response(
             text=fixture("editMonitor", False),
@@ -22,11 +23,9 @@ async def test_async_edit_monitor(aresponses):
         ),
     )
 
-    status = "paused"
-
     async with aiohttp.ClientSession() as session:
         client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
-        result = await client.async_edit_monitor(monitor_id=1234, **{"status": status})
+        result = await client.async_edit_monitor(monitor_id=1234, **{"status": API_STATUS_PAUSED})
         assert isinstance(result, UptimeRobotApiResponse)
         assert isinstance(result.data, UptimeRobotMonitor)
-        assert result.data.status == status
+        assert result.data.status == API_STATUS_PAUSED

@@ -12,8 +12,9 @@ from pyuptimerobot import exceptions
 
 from .const import (
     API_BASE_URL,
+    API_MONITOR_ACTION_PAUSE,
     API_PATH_MONITOR_DETAIL,
-    API_STATUS_PAUSE,
+    API_STATUS_PAUSED,
     API_STATUS_RESET,
     API_STATUS_START,
     LOGGER,
@@ -46,11 +47,14 @@ def api_request(
             url = f"{API_BASE_URL}{api_path}"
             if (monitor_id := kwargs.pop("monitor_id", None)) is not None:
                 url = url.format(monitor_id=monitor_id)
-            if api_path == API_PATH_MONITOR_DETAIL and (
-                action := kwargs["status"]
-                in {API_STATUS_RESET, API_STATUS_PAUSE, API_STATUS_START}
+            if (
+                api_path == API_PATH_MONITOR_DETAIL
+                and (status := kwargs["status"])
+                and status in (API_STATUS_START, API_STATUS_PAUSED, API_STATUS_RESET)
             ):
+                action = API_MONITOR_ACTION_PAUSE if status == API_STATUS_PAUSED else status
                 url = f"{url}/{action}"
+
             LOGGER.debug("Requesting %s with payload %s", url, kwargs)
             try:
                 request = await client._session.request(
