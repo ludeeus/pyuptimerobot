@@ -12,11 +12,8 @@ from pyuptimerobot import exceptions
 
 from .const import (
     API_BASE_URL,
-    API_MONITOR_ACTION_PAUSE,
     API_PATH_MONITOR_DETAIL,
-    API_STATUS_PAUSED,
-    API_STATUS_RESET,
-    API_STATUS_START,
+    API_STATUS_TO_ACTION,
     LOGGER,
 )
 from .models import UptimeRobotApiResponse
@@ -49,10 +46,9 @@ def api_request(
                 url = url.format(monitor_id=monitor_id)
             if (
                 api_path == API_PATH_MONITOR_DETAIL
-                and (status := kwargs["status"])
-                and status in (API_STATUS_START, API_STATUS_PAUSED, API_STATUS_RESET)
+                and (status := kwargs.get("status")) is not None
+                and (action := API_STATUS_TO_ACTION.get(status)) is not None
             ):
-                action = API_MONITOR_ACTION_PAUSE if status == API_STATUS_PAUSED else status
                 url = f"{url}/{action}"
 
             LOGGER.debug("Requesting %s with payload %s", url, kwargs)
