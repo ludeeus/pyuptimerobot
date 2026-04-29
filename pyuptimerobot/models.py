@@ -83,7 +83,7 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
                     RDT,
                     [UptimeRobotMonitor.from_dict(monitor) for monitor in raw_data["data"]],
                 )
-            elif apipath.startswith(API_PATH_MONITORS + "/"):
+            elif apipath.startswith("/monitors/"):
                 return cast(RDT, UptimeRobotMonitor.from_dict(raw_data))
             elif apipath == API_PATH_USER_ME:
                 return cast(RDT, UptimeRobotAccount.from_dict(raw_data))
