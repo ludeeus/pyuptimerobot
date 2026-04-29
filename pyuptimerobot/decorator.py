@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Coroutine
+from functools import wraps
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar, cast
 
 import aiohttp
 
@@ -12,8 +13,6 @@ from pyuptimerobot import exceptions
 
 from .const import (
     API_BASE_URL,
-    API_PATH_MONITOR_DETAIL,
-    API_STATUS_TO_ACTION,
     LOGGER,
 )
 from .models import UptimeRobotApiResponse
@@ -21,35 +20,32 @@ from .models import UptimeRobotApiResponse
 if TYPE_CHECKING:
     from .uptimerobot import UptimeRobot
 
-
+P = ParamSpec("P")
 ResponseDataT = TypeVar("ResponseDataT")
 
 
 def api_request(
     api_path: str, method: str = "GET"
 ) -> Callable[
-    [Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]],
-    Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]],
+    [Callable[P, Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]],
+    Callable[P, Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]],
 ]:
     """Decorator for Uptime Robot API request"""
 
     def decorator(
-        _func: Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]],
-    ) -> Callable[..., Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]:
+        _func: Callable[P, Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]],
+    ) -> Callable[P, Coroutine[Any, Any, UptimeRobotApiResponse[ResponseDataT]]]:
         """Decorator"""
 
-        async def wrapper(*args: Any, **kwargs: Any) -> UptimeRobotApiResponse[ResponseDataT]:
+        @wraps(_func)
+        async def wrapper(
+            *args: P.args, **kwargs: P.kwargs
+        ) -> UptimeRobotApiResponse[ResponseDataT]:
             """Wrapper"""
             client = cast("UptimeRobot", args[0])
             url = f"{API_BASE_URL}{api_path}"
             if (monitor_id := kwargs.pop("monitor_id", None)) is not None:
                 url = url.format(monitor_id=monitor_id)
-            if (
-                api_path == API_PATH_MONITOR_DETAIL
-                and (status := kwargs.get("status")) is not None
-                and (action := API_STATUS_TO_ACTION.get(status)) is not None
-            ):
-                url = f"{url}/{action}"
 
             LOGGER.debug("Requesting %s with payload %s", url, kwargs)
             try:
