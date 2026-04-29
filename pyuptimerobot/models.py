@@ -6,7 +6,7 @@ from annotationlib import get_annotations
 from dataclasses import dataclass
 from typing import Any, Generic, TypeVar, cast
 
-from .const import API_PATH_MONITOR_DETAIL, API_PATH_MONITORS, API_PATH_USER_ME
+from .const import API_PATH_MONITORS, API_PATH_USER_ME
 
 T = TypeVar("T", bound="UptimeRobotBaseModel")
 RDT = TypeVar("RDT")
@@ -83,7 +83,7 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
                     RDT,
                     [UptimeRobotMonitor.from_dict(monitor) for monitor in raw_data["data"]],
                 )
-            elif apipath == API_PATH_MONITOR_DETAIL:
+            elif apipath.startswith(API_PATH_MONITORS + "/"):
                 return cast(RDT, UptimeRobotMonitor.from_dict(raw_data))
             elif apipath == API_PATH_USER_ME:
                 return cast(RDT, UptimeRobotAccount.from_dict(raw_data))
