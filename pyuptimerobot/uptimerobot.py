@@ -16,7 +16,7 @@ from .exceptions import (
     UptimeRobotConnectionException,
     UptimeRobotException,
 )
-from .models import UptimeRobotAccount, UptimeRobotApiResponse, UptimeRobotMonitor
+from .models import RDT, UptimeRobotAccount, UptimeRobotApiResponse, UptimeRobotMonitor
 
 
 class UptimeRobot:
@@ -31,10 +31,10 @@ class UptimeRobot:
         self,
         *,
         api_path: str,
-        data_transformer: Callable[[dict[str, Any]], Any],
+        data_transformer: Callable[[dict[str, Any]], RDT],
         method: str = "GET",
         json: Any = None,
-    ) -> UptimeRobotApiResponse[Any]:
+    ) -> UptimeRobotApiResponse[RDT]:
         """Call the API."""
         url = f"{API_BASE_URL}{api_path}"
         LOGGER.debug("Requesting %s with payload %s", url, json)
