@@ -39,7 +39,7 @@ class UptimeRobot:
         url = f"{API_BASE_URL}{api_path}"
         LOGGER.debug("Requesting %s with payload %s", url, json)
         try:
-            request = await self._session.request(
+            async with self._session.request(
                 method=method,
                 url=url,
                 headers={
@@ -48,25 +48,24 @@ class UptimeRobot:
                 },
                 json=json,
                 timeout=ClientTimeout(total=10),
-            )
+            ) as request:
+                if request.status in EXPECTED_API_STATUS_CODES:
+                    result = await request.json()
+                    LOGGER.debug("Requesting %s returned %s", url, result)
+                    return UptimeRobotApiResponse.from_dict(
+                        data=data_transformer(result),
+                        api_path=api_path,
+                        method=method,
+                        pagination=result.get("pagination"),
+                    )
 
-            if request.status in EXPECTED_API_STATUS_CODES:
-                result = await request.json()
-                LOGGER.debug("Requesting %s returned %s", url, result)
-                return UptimeRobotApiResponse.from_dict(
-                    data=data_transformer(result),
-                    api_path=api_path,
-                    method=method,
-                    pagination=result.get("pagination"),
+                if request.status == HTTPStatus.UNAUTHORIZED:
+                    raise UptimeRobotAuthenticationException(
+                        f"Authentication failed for '{url}' with status code '{request.status}'"
+                    )
+                raise UptimeRobotConnectionException(
+                    f"Request for '{url}' failed with status code '{request.status}'"
                 )
-
-            if request.status == HTTPStatus.UNAUTHORIZED:
-                raise UptimeRobotAuthenticationException(
-                    f"Authentication failed for '{url}' with status code '{request.status}'"
-                )
-            raise UptimeRobotConnectionException(
-                f"Request for '{url}' failed with status code '{request.status}'"
-            )
 
         except ClientError as exception:
             raise UptimeRobotConnectionException(
