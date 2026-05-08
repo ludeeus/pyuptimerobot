@@ -1,11 +1,13 @@
 """Uptime Robot constants."""
 
+from http import HTTPStatus
 from logging import Logger, getLogger
 
 LOGGER: Logger = getLogger(__package__)
 
 API_BASE_URL = "https://api.uptimerobot.com/v3"
 
-API_PATH_MONITORS = "/monitors"
-API_PATH_MONITOR_DETAIL = "/monitors/{monitor_id}"
-API_PATH_USER_ME = "/user/me"
+EXPECTED_API_STATUS_CODES = (
+    HTTPStatus.OK,
+    HTTPStatus.CREATED,
+)
