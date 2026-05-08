@@ -3,8 +3,8 @@
 from pyuptimerobot.models import UptimeRobotApiResponse
 
 
-def test_api_response_unknown_endpoint():
-    """Test UptimeRobotApiResponse.from_dict with unknown API path (fallback)."""
+def test_api_response_wraps_data_for_arbitrary_api_path():
+    """Test UptimeRobotApiResponse.from_dict wraps data and preserves request metadata."""
     data = {
         "some_key": "some_value",
         "another_key": 123,
