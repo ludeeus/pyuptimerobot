@@ -22,9 +22,7 @@ from .models import RDT, UptimeRobotAccount, UptimeRobotApiResponse, UptimeRobot
 class UptimeRobot:
     """This class is used to get information from Uptime Robot."""
 
-    def __init__(
-        self, api_key: str, session: ClientSession, timeout: float = 10
-    ) -> None:
+    def __init__(self, api_key: str, session: ClientSession, timeout: float = 10) -> None:
         """Initialize"""
         self._api_key: str = api_key
         self._session: ClientSession = session
