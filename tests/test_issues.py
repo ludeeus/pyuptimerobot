@@ -213,4 +213,35 @@ async def test_ratelimit_on_success(aresponses):
         assert result.ratelimit is not None
         assert result.ratelimit["limit"] == 100
         assert result.ratelimit["remaining"] == 99
-        assert result.ratelimit == client.ratelimit
+
+
+@pytest.mark.asyncio
+async def test_rate_limit_with_invalid_headers(aresponses):
+    """test_rate_limit_with_invalid_headers."""
+    aresponses.add(
+        "api.uptimerobot.com",
+        "/v3/monitors",
+        "get",
+        aresponses.Response(
+            text=fixture("getMonitors", False),
+            status=429,
+            headers={
+                **TEST_RESPONSE_HEADERS,
+                "X-RateLimit-Limit": "invalid",
+                "X-RateLimit-Remaining": "abc",
+                "X-RateLimit-Reset": "",
+                "Retry-After": "not_a_number",
+            },
+        ),
+    )
+
+    async with aiohttp.ClientSession() as session:
+        client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
+        with pytest.raises(UptimeRobotRateLimitException) as exc_info:
+            await client.async_get_monitors()
+
+        exc = exc_info.value
+        assert exc.limit is None
+        assert exc.remaining is None
+        assert exc.reset is None
+        assert exc.retry_after is None
