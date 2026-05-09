@@ -51,4 +51,4 @@ class UptimeRobotRateLimitException(UptimeRobotConnectionException):
     @property
     def updated_at(self) -> float:
         """A Unix timestamp when the rate limit info was captured."""
-        return self._ratelimit.get("updated_at")
+        return self._ratelimit["updated_at"]
