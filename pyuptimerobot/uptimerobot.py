@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 from http import HTTPStatus
+from time import time
 from typing import Any
 
 from aiohttp import ClientError, ClientSession, ClientTimeout
@@ -15,8 +16,25 @@ from .exceptions import (
     UptimeRobotAuthenticationException,
     UptimeRobotConnectionException,
     UptimeRobotException,
+    UptimeRobotRateLimitException,
 )
-from .models import RDT, UptimeRobotAccount, UptimeRobotApiResponse, UptimeRobotMonitor
+from .models import (
+    RDT,
+    UptimeRobotAccount,
+    UptimeRobotApiResponse,
+    UptimeRobotMonitor,
+    UptimeRobotRateLimit,
+)
+
+
+def _parse_int(value: str | None) -> int | None:
+    """Parse a string to int, returning None if missing or invalid."""
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except ValueError, TypeError:
+        return None
 
 
 class UptimeRobot:
@@ -26,6 +44,12 @@ class UptimeRobot:
         """Initialize"""
         self._api_key: str = api_key
         self._session: ClientSession = session
+        self._ratelimit: UptimeRobotRateLimit | None = None
+
+    @property
+    def ratelimit(self) -> UptimeRobotRateLimit | None:
+        """Current rate limit information."""
+        return self._ratelimit
 
     async def _call_api(
         self,
@@ -49,6 +73,14 @@ class UptimeRobot:
                 json=json,
                 timeout=ClientTimeout(total=10),
             ) as request:
+                self._ratelimit = ratelimit = UptimeRobotRateLimit(
+                    limit=_parse_int(request.headers.get("X-RateLimit-Limit")),
+                    remaining=_parse_int(request.headers.get("X-RateLimit-Remaining")),
+                    reset=_parse_int(request.headers.get("X-RateLimit-Reset")),
+                    retry_after=_parse_int(request.headers.get("Retry-After")),
+                    updated_at=time(),
+                )
+
                 if request.status in EXPECTED_API_STATUS_CODES:
                     result = await request.json()
                     LOGGER.debug("Requesting %s returned %s", url, result)
@@ -57,7 +89,11 @@ class UptimeRobot:
                         api_path=api_path,
                         method=method,
                         pagination=result.get("pagination"),
+                        ratelimit=ratelimit,
                     )
+
+                if request.status == HTTPStatus.TOO_MANY_REQUESTS:
+                    raise UptimeRobotRateLimitException("Rate limit exceeded", ratelimit=ratelimit)
 
                 if request.status == HTTPStatus.UNAUTHORIZED:
                     raise UptimeRobotAuthenticationException(
