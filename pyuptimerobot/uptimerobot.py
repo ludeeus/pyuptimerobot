@@ -83,7 +83,15 @@ class UptimeRobot:
 
                 if request.status in EXPECTED_API_STATUS_CODES:
                     result = await request.json()
-                    LOGGER.debug("Requesting %s returned %s", url, result)
+                    LOGGER.debug(
+                        "Requesting %s returned %s (ratelimit %s/%s)",
+                        url,
+                        result,
+                        (ratelimit["limit"] - ratelimit["remaining"])
+                        if ratelimit["limit"] is not None and ratelimit["remaining"] is not None
+                        else None,
+                        ratelimit["limit"],
+                    )
                     return UptimeRobotApiResponse.from_dict(
                         data=data_transformer(result),
                         api_path=api_path,
