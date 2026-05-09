@@ -88,13 +88,12 @@ async def test_timeout_error():
 
 @pytest.mark.asyncio
 async def test_default_timeout_used():
-    """test_default_timeout_used."""
+    """Verify that the default timeout is passed to requests."""
     with patch("aiohttp.ClientSession._request", side_effect=asyncio.TimeoutError) as request_mock:
         async with aiohttp.ClientSession() as session:
             client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
             with pytest.raises(UptimeRobotConnectionException):
-                result = await client.async_get_monitors()
-                assert result is None
+                await client.async_get_monitors()
 
     timeout = request_mock.call_args.kwargs["timeout"]
     assert isinstance(timeout, ClientTimeout)
@@ -103,13 +102,12 @@ async def test_default_timeout_used():
 
 @pytest.mark.asyncio
 async def test_custom_timeout_used():
-    """test_custom_timeout_used."""
+    """Verify that a custom timeout is passed to requests."""
     with patch("aiohttp.ClientSession._request", side_effect=asyncio.TimeoutError) as request_mock:
         async with aiohttp.ClientSession() as session:
             client = UptimeRobot(session=session, api_key=TEST_API_TOKEN, timeout=4.5)
             with pytest.raises(UptimeRobotConnectionException):
-                result = await client.async_get_monitors()
-                assert result is None
+                await client.async_get_monitors()
 
     timeout = request_mock.call_args.kwargs["timeout"]
     assert isinstance(timeout, ClientTimeout)
