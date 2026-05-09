@@ -33,7 +33,7 @@ def _parse_int(value: str | None) -> int | None:
         return None
     try:
         return int(value)
-    except ValueError, TypeError:
+    except (ValueError, TypeError):
         return None
 
 
