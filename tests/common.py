@@ -2,7 +2,12 @@ import json
 import os
 
 TEST_API_TOKEN = "ur1234567-0abc12de3f456gh7ij89k012"
-TEST_RESPONSE_HEADERS = {"Content-Type": "application/json"}
+TEST_RESPONSE_HEADERS = {
+    "Content-Type": "application/json",
+    "X-RateLimit-Limit": "100",
+    "X-RateLimit-Remaining": "99",
+    "X-RateLimit-Reset": "4200000000",
+}
 
 
 def fixture(filename, asjson=True):

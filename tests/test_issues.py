@@ -164,7 +164,7 @@ async def test_rate_limit_without_headers(aresponses):
         aresponses.Response(
             text=fixture("getMonitors", False),
             status=429,
-            headers=TEST_RESPONSE_HEADERS,
+            headers={"content-type": "application/json"},
         ),
     )
 
