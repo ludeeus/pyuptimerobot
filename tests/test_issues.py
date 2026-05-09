@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import aiohttp
 import pytest
+from aiohttp import ClientTimeout
 
 from pyuptimerobot import (
     UptimeRobot,
@@ -83,6 +84,40 @@ async def test_timeout_error():
             with pytest.raises(UptimeRobotConnectionException):
                 result = await client.async_get_monitors()
                 assert result is None
+
+
+@pytest.mark.asyncio
+async def test_default_timeout_used():
+    """test_default_timeout_used."""
+    with patch(
+        "aiohttp.ClientSession._request", side_effect=asyncio.TimeoutError
+    ) as request_mock:
+        async with aiohttp.ClientSession() as session:
+            client = UptimeRobot(session=session, api_key=TEST_API_TOKEN)
+            with pytest.raises(UptimeRobotConnectionException):
+                result = await client.async_get_monitors()
+                assert result is None
+
+    timeout = request_mock.call_args.kwargs["timeout"]
+    assert isinstance(timeout, ClientTimeout)
+    assert timeout.total == 10
+
+
+@pytest.mark.asyncio
+async def test_custom_timeout_used():
+    """test_custom_timeout_used."""
+    with patch(
+        "aiohttp.ClientSession._request", side_effect=asyncio.TimeoutError
+    ) as request_mock:
+        async with aiohttp.ClientSession() as session:
+            client = UptimeRobot(session=session, api_key=TEST_API_TOKEN, timeout=4.5)
+            with pytest.raises(UptimeRobotConnectionException):
+                result = await client.async_get_monitors()
+                assert result is None
+
+    timeout = request_mock.call_args.kwargs["timeout"]
+    assert isinstance(timeout, ClientTimeout)
+    assert timeout.total == 4.5
 
 
 @pytest.mark.asyncio
