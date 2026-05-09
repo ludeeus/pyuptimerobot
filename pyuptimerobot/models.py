@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from annotationlib import get_annotations
 from dataclasses import dataclass
-from typing import Any, Generic, TypeVar, cast
-
-from .const import API_PATH_MONITORS, API_PATH_USER_ME
+from typing import Any, Generic, TypeVar
 
 T = TypeVar("T", bound="UptimeRobotBaseModel")
 RDT = TypeVar("RDT")
@@ -58,7 +56,7 @@ class UptimeRobotMonitor(UptimeRobotBaseModel):
 
 
 @dataclass
-class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
+class UptimeRobotApiResponse(Generic[RDT]):
     """API response model for Uptime Robot."""
 
     _method: str
@@ -69,31 +67,16 @@ class UptimeRobotApiResponse(UptimeRobotBaseModel, Generic[RDT]):
 
     @classmethod
     def from_dict(
-        cls: type[UptimeRobotApiResponse[RDT]], data: dict[str, Any]
+        cls: type[UptimeRobotApiResponse[RDT]],
+        data: RDT,
+        api_path: str,
+        method: str,
+        pagination: dict[str, Any] | None = None,
     ) -> UptimeRobotApiResponse[RDT]:
-        """Generate object from json."""
-        apipath = data.pop("_api_path")
-        method = data.pop("_method")
-        pagination = data.pop("pagination", None)
-
-        def _convert_data(raw_data: dict[str, Any]) -> RDT:
-            """Convert raw API data to appropriate model type based on endpoint."""
-            if apipath == API_PATH_MONITORS:
-                return cast(
-                    RDT,
-                    [UptimeRobotMonitor.from_dict(monitor) for monitor in raw_data["data"]],
-                )
-            elif apipath.startswith(API_PATH_MONITORS + "/"):
-                return cast(RDT, UptimeRobotMonitor.from_dict(raw_data))
-            elif apipath == API_PATH_USER_ME:
-                return cast(RDT, UptimeRobotAccount.from_dict(raw_data))
-            else:
-                # Fallback for unknown endpoints - return raw data
-                return cast(RDT, raw_data)
-
+        """Generate a common API response object."""
         return UptimeRobotApiResponse(
-            _api_path=apipath,
+            _api_path=api_path,
             _method=method,
-            data=_convert_data(data),
+            data=data,
             pagination=(UptimeRobotPagination.from_dict(pagination) if pagination else None),
         )
