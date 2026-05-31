@@ -2,7 +2,7 @@
 	"name": "ludeeus/pyuptimerobot",
 	"build": {
 		"context": "..",
-		"dockerfile": ".devcontainer/Dockerfile"
+		"dockerfile": "./Dockerfile"
 	},
 	"postCreateCommand": "scripts/setup",
 	"postStartCommand": "scripts/motd",
