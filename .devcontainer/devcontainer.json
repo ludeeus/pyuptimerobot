@@ -9,7 +9,7 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"python.defaultInterpreterPath": "/home/vscode/.local/venv/bin/python",
+				"python.defaultInterpreterPath": "/home/vscode/.local/uv-venv/bin/python",
 				"[python]": {
 					"editor.defaultFormatter": "charliermarsh.ruff",
 					"editor.formatOnSave": true,
