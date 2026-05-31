@@ -1,14 +1,10 @@
 {
 	"name": "ludeeus/pyuptimerobot",
-	"image": "mcr.microsoft.com/vscode/devcontainers/python:3-3.14",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
 	"postCreateCommand": "scripts/setup",
 	"postStartCommand": "scripts/motd",
-	"features": {
-		"ghcr.io/va-h/devcontainers-features/uv:1": {
-			"version": "0.8.22",
-			"shellautocompletion": true
-		}
-	},
 	"customizations": {
 		"vscode": {
 			"settings": {
