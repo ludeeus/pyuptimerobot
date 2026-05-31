@@ -14,9 +14,6 @@ RUN --mount=type=bind,source=.python-version,target=.python-version \
     && uv venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Shell completion for uv
-RUN echo 'eval "$(uv generate-shell-completion bash)"' >> /home/vscode/.bashrc
-
 WORKDIR /workspaces
 
 # Set the default shell to bash instead of sh
