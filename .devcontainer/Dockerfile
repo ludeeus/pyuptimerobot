@@ -8,7 +8,7 @@ COPY --from=ghcr.io/astral-sh/uv:0.8.22 /uv /uvx /usr/local/bin/
 
 USER vscode
 
-ENV VIRTUAL_ENV="/home/vscode/.local/uv-venv"
+ENV VIRTUAL_ENV="/home/vscode/.local/pyuptimerobot-venv"
 RUN --mount=type=bind,source=.python-version,target=.python-version \
     uv python install \
     && uv venv $VIRTUAL_ENV
