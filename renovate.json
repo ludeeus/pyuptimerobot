@@ -7,5 +7,21 @@
   "labels": [
     "dependencies"
   ],
-  "prConcurrentLimit": 10
+  "prConcurrentLimit": 10,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^\\.devcontainer\\.json$"],
+      "matchStrings": ["ghcr\\.io/va-h/devcontainers-features/uv:\\d+\":\\s*\\{\\s*\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "astral-sh/uv",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    }
+  ],
+  "packageRules": [
+    {
+      "groupName": "uv",
+      "matchDepNames": ["astral-sh/uv", "astral-sh/setup-uv"]
+    }
+  ]
 }
