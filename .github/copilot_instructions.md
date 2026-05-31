@@ -43,7 +43,7 @@ pyuptimerobot is a Python library that wraps the Uptime Robot API, providing an 
 
 ### 1. Code style and formatting
 
-- **Python version**: Support Python 3.13+ (as specified in pyproject.toml)
+- **Python version**: Support Python 3.14+ (as specified in pyproject.toml)
 - **Dependencies**: Keep dependencies minimal - currently only aiohttp for runtime
 - **Type hints**: Use type hints throughout for better IDE support
 - **Docstrings**: Follow Google-style docstrings for classes and public methods
