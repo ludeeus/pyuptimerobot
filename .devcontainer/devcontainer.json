@@ -1,14 +1,15 @@
 {
 	"name": "ludeeus/pyuptimerobot",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"context": "..",
+		"dockerfile": ".devcontainer/Dockerfile"
 	},
 	"postCreateCommand": "scripts/setup",
 	"postStartCommand": "scripts/motd",
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"python.defaultInterpreterPath": "/usr/local/bin/python",
+				"python.defaultInterpreterPath": "/home/vscode/.local/venv/bin/python",
 				"[python]": {
 					"editor.defaultFormatter": "charliermarsh.ruff",
 					"editor.formatOnSave": true,
