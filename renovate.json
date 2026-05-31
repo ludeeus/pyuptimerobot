@@ -2,6 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices"],
   "minimumReleaseAge": "2 days",
+  "ignoreDeps": [
+    "mcr.microsoft.com/vscode/devcontainers/base"
+  ],
   "osvVulnerabilityAlerts": true,
   "dependencyDashboardOSVVulnerabilitySummary": "all",
   "labels": [
