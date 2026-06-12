@@ -62,6 +62,7 @@ class UptimeRobotRateLimit(TypedDict):
         limit: The current rate limit (number of calls allowed in the current period).
         remaining: The number of calls left in the current period.
         reset: The time in seconds until the rate limit resets.
+            Epoch timestamps sent by the server are converted to a delta.
         retry_after: The number of seconds after which you should retry the call.
         updated_at: A Unix timestamp when the rate limit info was captured.
     """

@@ -1,6 +1,7 @@
 """Uptime Robot client."""
 
 from collections.abc import Callable
+from email.utils import parsedate_to_datetime
 from http import HTTPStatus
 from time import time
 from typing import Any
@@ -37,6 +38,33 @@ def _parse_int(value: str | None) -> int | None:
         return None
 
 
+def _parse_reset(value: str | None) -> int | None:
+    """Parse the X-RateLimit-Reset header to seconds until the rate limit resets.
+
+    The value is assumed to be a delta in seconds, but values above 1000
+    that represent an epoch timestamp in the future are converted to a delta.
+    """
+    if (parsed := _parse_int(value)) is None:
+        return None
+    now = time()
+    if parsed > 1000 and parsed > now:
+        return int(parsed - now)
+    return parsed
+
+
+def _parse_retry_after(value: str | None) -> int | None:
+    """Parse the Retry-After header to seconds, handling both delta and HTTP-date forms."""
+    if value is None:
+        return None
+    if (parsed := _parse_int(value)) is not None:
+        return parsed
+    try:
+        retry_at = parsedate_to_datetime(value)
+    except ValueError, TypeError:
+        return None
+    return max(0, int(retry_at.timestamp() - time()))
+
+
 class UptimeRobot:
     """This class is used to get information from Uptime Robot."""
 
@@ -48,7 +76,7 @@ class UptimeRobot:
 
     @property
     def ratelimit(self) -> UptimeRobotRateLimit | None:
-        """Current rate limit information."""
+        """Rate limit information from the most recent response."""
         return self._ratelimit
 
     async def _call_api(
@@ -76,8 +104,8 @@ class UptimeRobot:
                 self._ratelimit = ratelimit = UptimeRobotRateLimit(
                     limit=_parse_int(request.headers.get("X-RateLimit-Limit")),
                     remaining=_parse_int(request.headers.get("X-RateLimit-Remaining")),
-                    reset=_parse_int(request.headers.get("X-RateLimit-Reset")),
-                    retry_after=_parse_int(request.headers.get("Retry-After")),
+                    reset=_parse_reset(request.headers.get("X-RateLimit-Reset")),
+                    retry_after=_parse_retry_after(request.headers.get("Retry-After")),
                     updated_at=time(),
                 )
 
@@ -99,7 +127,9 @@ class UptimeRobot:
                     )
 
                 if request.status == HTTPStatus.TOO_MANY_REQUESTS:
-                    raise UptimeRobotRateLimitException("Rate limit exceeded", ratelimit=ratelimit)
+                    raise UptimeRobotRateLimitException(
+                        f"Rate limit exceeded for '{url}'", ratelimit=ratelimit
+                    )
 
                 if request.status == HTTPStatus.UNAUTHORIZED:
                     raise UptimeRobotAuthenticationException(
