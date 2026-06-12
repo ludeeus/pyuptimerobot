@@ -20,13 +20,18 @@ class UptimeRobotAuthenticationException(UptimeRobotException):
     """Uptime Robot authentication exception."""
 
 
-class UptimeRobotRateLimitException(UptimeRobotConnectionException):
+class UptimeRobotRateLimitException(UptimeRobotException):
     """Uptime Robot rate limit exception."""
 
     def __init__(self, *args: object, ratelimit: UptimeRobotRateLimit) -> None:
         """Initialize."""
         super().__init__(*args)
         self._ratelimit = ratelimit
+
+    @property
+    def ratelimit(self) -> UptimeRobotRateLimit:
+        """The rate limit information captured when the exception was raised."""
+        return self._ratelimit
 
     @property
     def limit(self) -> int | None:
@@ -40,7 +45,10 @@ class UptimeRobotRateLimitException(UptimeRobotConnectionException):
 
     @property
     def reset(self) -> int | None:
-        """The time in seconds until the rate limit resets."""
+        """The time in seconds until the rate limit resets.
+
+        Epoch timestamps sent by the server are converted to a delta.
+        """
         return self._ratelimit.get("reset")
 
     @property
