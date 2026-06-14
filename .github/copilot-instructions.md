@@ -6,7 +6,7 @@ These instructions are shared with Claude Code via a root `CLAUDE.md` symlink. K
 
 ## Project facts
 
-- **Python**: 3.14+ (`.python-version`, `pyproject.toml`).
+- **Minimum supported Python**: 3.14 (`requires-python = ">=3.14.0"` in `pyproject.toml`, `.python-version`, ruff `target-version = "py314"`). Do not use syntax or stdlib features unavailable in 3.14.
 - **Runtime dependency**: `aiohttp` only.
 - **Build backend**: `hatchling`.
 - **Dependency / task runner**: `uv`. Development tasks are wrapped in the `scripts/` directory ("Scripts to Rule Them All"). Prefer the wrappers over raw commands.
