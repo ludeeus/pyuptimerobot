@@ -1,6 +1,5 @@
 # pyuptimerobot
 
-[![codecov](https://codecov.io/gh/ludeeus/pyuptimerobot/branch/main/graph/badge.svg)](https://codecov.io/gh/ludeeus/pyuptimerobot)
 [![PyPI](https://img.shields.io/pypi/v/pyuptimerobot)](https://pypi.org/project/pyuptimerobot)
 ![Actions](https://github.com/ludeeus/pyuptimerobot/workflows/Actions/badge.svg?branch=main)
 
