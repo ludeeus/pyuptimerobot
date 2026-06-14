@@ -22,10 +22,11 @@ jobs:
     steps:
       - name: 📥 Checkout the repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: 🛠 Set up Python 3.14
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        id: python
         with:
           python-version: "3.14"
 
@@ -58,6 +59,8 @@ jobs:
     steps:
       - name: 📥 Checkout the repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: 🛠️ Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -76,31 +79,8 @@ jobs:
       - name: 🏃 Run tests
         run: scripts/test
 
+      - name: ✅ Verify 100% coverage
+        run: uv run --dev coverage report
+
       - name: 🛠 Build
         run: scripts/build
-
-  coverage:
-    name: Verify coverage
-    needs: test
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: 📥 Checkout the repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-
-      - name: 🛠️ Set up Python 3.14
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: "3.14"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39  # v8.2.0
-        with:
-          version: "0.11.17"
-          enable-cache: true
-
-      - name: 📦 Install dependencies
-        run: scripts/bootstrap
-
-      - name: ✅ Verify 100% coverage
-        run: scripts/coverage
