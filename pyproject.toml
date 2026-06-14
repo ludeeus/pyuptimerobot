@@ -91,7 +91,7 @@ disallow_untyped_decorators = false
 
 [tool.coverage.run]
 source = ["pyuptimerobot"]
-omit = ["tests/*"]
+omit = ["tests/*", "example.py"]
 
 [tool.coverage.report]
 exclude_lines = ["if TYPE_CHECKING:"]
