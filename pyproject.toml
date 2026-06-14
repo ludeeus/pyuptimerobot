@@ -95,6 +95,7 @@ omit = ["tests/*"]
 
 [tool.coverage.report]
 exclude_lines = ["if TYPE_CHECKING:"]
+fail_under = 100
 
 [tool.hatch.build.targets.wheel]
 packages = ["pyuptimerobot"]
