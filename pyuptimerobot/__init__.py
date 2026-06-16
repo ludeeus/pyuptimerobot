@@ -4,6 +4,7 @@ from .exceptions import (
     UptimeRobotAuthenticationException,
     UptimeRobotConnectionException,
     UptimeRobotException,
+    UptimeRobotRateLimitException,
 )
 from .models import (
     UptimeRobotAccount,
@@ -11,6 +12,7 @@ from .models import (
     UptimeRobotBaseModel,
     UptimeRobotMonitor,
     UptimeRobotPagination,
+    UptimeRobotRateLimit,
 )
 from .uptimerobot import UptimeRobot
 
@@ -24,4 +26,6 @@ __all__ = [
     "UptimeRobotException",
     "UptimeRobotMonitor",
     "UptimeRobotPagination",
+    "UptimeRobotRateLimit",
+    "UptimeRobotRateLimitException",
 ]

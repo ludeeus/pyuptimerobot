@@ -9,7 +9,7 @@ from tests.common import TEST_API_TOKEN, TEST_RESPONSE_HEADERS, fixture
 
 
 @pytest.mark.asyncio
-async def test_async_get_monitors(aresponses):
+async def test_async_get_monitors(aresponses, caplog):
     """test_async_get_monitors."""
     aresponses.add(
         "api.uptimerobot.com",
@@ -30,3 +30,6 @@ async def test_async_get_monitors(aresponses):
         )
         monitor = result.data[0]
         assert monitor.id == 0
+
+    assert "Requesting https://api.uptimerobot.com/v3/monitors" in caplog.text
+    assert "(ratelimit 99/100)" in caplog.text

@@ -1,7 +1,9 @@
 """Uptime Robot client."""
 
 from collections.abc import Callable
+from email.utils import parsedate_to_datetime
 from http import HTTPStatus
+from time import time
 from typing import Any
 
 from aiohttp import ClientError, ClientSession, ClientTimeout
@@ -15,8 +17,52 @@ from .exceptions import (
     UptimeRobotAuthenticationException,
     UptimeRobotConnectionException,
     UptimeRobotException,
+    UptimeRobotRateLimitException,
 )
-from .models import RDT, UptimeRobotAccount, UptimeRobotApiResponse, UptimeRobotMonitor
+from .models import (
+    RDT,
+    UptimeRobotAccount,
+    UptimeRobotApiResponse,
+    UptimeRobotMonitor,
+    UptimeRobotRateLimit,
+)
+
+
+def _parse_int(value: str | None) -> int | None:
+    """Parse a string to int, returning None if missing or invalid."""
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except ValueError, TypeError:
+        return None
+
+
+def _parse_reset(value: str | None) -> int | None:
+    """Parse the X-RateLimit-Reset header to seconds until the rate limit resets.
+
+    The value is assumed to be a delta in seconds, but values above 1000
+    that represent an epoch timestamp in the future are converted to a delta.
+    """
+    if (parsed := _parse_int(value)) is None:
+        return None
+    now = time()
+    if parsed > 1000 and parsed > now:
+        return int(parsed - now)
+    return parsed
+
+
+def _parse_retry_after(value: str | None) -> int | None:
+    """Parse the Retry-After header to seconds, handling both delta and HTTP-date forms."""
+    if value is None:
+        return None
+    if (parsed := _parse_int(value)) is not None:
+        return parsed
+    try:
+        retry_at = parsedate_to_datetime(value)
+    except ValueError, TypeError:
+        return None
+    return max(0, int(retry_at.timestamp() - time()))
 
 
 class UptimeRobot:
@@ -26,6 +72,12 @@ class UptimeRobot:
         """Initialize"""
         self._api_key: str = api_key
         self._session: ClientSession = session
+        self._ratelimit: UptimeRobotRateLimit | None = None
+
+    @property
+    def ratelimit(self) -> UptimeRobotRateLimit | None:
+        """Rate limit information from the most recent response."""
+        return self._ratelimit
 
     async def _call_api(
         self,
@@ -49,14 +101,34 @@ class UptimeRobot:
                 json=json,
                 timeout=ClientTimeout(total=10),
             ) as request:
+                self._ratelimit = ratelimit = UptimeRobotRateLimit(
+                    limit=_parse_int(request.headers.get("X-RateLimit-Limit")),
+                    remaining=_parse_int(request.headers.get("X-RateLimit-Remaining")),
+                    reset=_parse_reset(request.headers.get("X-RateLimit-Reset")),
+                    retry_after=_parse_retry_after(request.headers.get("Retry-After")),
+                    updated_at=time(),
+                )
+
                 if request.status in EXPECTED_API_STATUS_CODES:
                     result = await request.json()
-                    LOGGER.debug("Requesting %s returned %s", url, result)
+                    LOGGER.debug(
+                        "Requesting %s returned %s (ratelimit %s/%s)",
+                        url,
+                        result,
+                        ratelimit.get("remaining"),
+                        ratelimit.get("limit"),
+                    )
                     return UptimeRobotApiResponse.from_dict(
                         data=data_transformer(result),
                         api_path=api_path,
                         method=method,
                         pagination=result.get("pagination"),
+                        ratelimit=ratelimit,
+                    )
+
+                if request.status == HTTPStatus.TOO_MANY_REQUESTS:
+                    raise UptimeRobotRateLimitException(
+                        f"Rate limit exceeded for '{url}'", ratelimit=ratelimit
                     )
 
                 if request.status == HTTPStatus.UNAUTHORIZED:

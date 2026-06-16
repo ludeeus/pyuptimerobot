@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from annotationlib import get_annotations
 from dataclasses import dataclass
-from typing import Any, Generic, TypeVar
+from typing import Any, Generic, TypedDict, TypeVar
 
 T = TypeVar("T", bound="UptimeRobotBaseModel")
 RDT = TypeVar("RDT")
@@ -55,6 +55,25 @@ class UptimeRobotMonitor(UptimeRobotBaseModel):
     type: str | None = None
 
 
+class UptimeRobotRateLimit(TypedDict):
+    """Rate limit information from API response headers.
+
+    Attributes:
+        limit: The current rate limit (number of calls allowed in the current period).
+        remaining: The number of calls left in the current period.
+        reset: The time in seconds until the rate limit resets.
+            Epoch timestamps sent by the server are converted to a delta.
+        retry_after: The number of seconds after which you should retry the call.
+        updated_at: A Unix timestamp when the rate limit info was captured.
+    """
+
+    limit: int | None
+    remaining: int | None
+    reset: int | None
+    retry_after: int | None
+    updated_at: float
+
+
 @dataclass
 class UptimeRobotApiResponse(Generic[RDT]):
     """API response model for Uptime Robot."""
@@ -64,6 +83,7 @@ class UptimeRobotApiResponse(Generic[RDT]):
 
     data: RDT
     pagination: UptimeRobotPagination | None = None
+    ratelimit: UptimeRobotRateLimit | None = None
 
     @classmethod
     def from_dict(
@@ -72,6 +92,7 @@ class UptimeRobotApiResponse(Generic[RDT]):
         api_path: str,
         method: str,
         pagination: dict[str, Any] | None = None,
+        ratelimit: UptimeRobotRateLimit | None = None,
     ) -> UptimeRobotApiResponse[RDT]:
         """Generate a common API response object."""
         return UptimeRobotApiResponse(
@@ -79,4 +100,5 @@ class UptimeRobotApiResponse(Generic[RDT]):
             _method=method,
             data=data,
             pagination=(UptimeRobotPagination.from_dict(pagination) if pagination else None),
+            ratelimit=ratelimit,
         )
